@@ -141,3 +141,27 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Android Studio & Gradle
+*.iml
+.gradle
+/build
+/*/build
+.idea
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/compiler.xml
+local.properties
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.dex
+output.json
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Unit Converter</string>
+    <string name="app_tagline">Oasis Infobyte · Task 1</string>
+    <string name="app_subtitle">Fast, accurate unit conversions across multiple measurement types</string>
+
+    <string name="section_category">Measurement Category</string>
+    <string name="section_conversion">Value &amp; Units</string>
+    <string name="section_result">Conversion Result</string>
+
+    <string name="input_hint">Enter numerical value</string>
+    <string name="input_helper">Type decimals (e.g., 25.4) or negative values for temperature</string>
+
+    <string name="label_from">From Unit</string>
+    <string name="label_to">To Unit</string>
+    <string name="swap_tooltip">Swap Units</string>
+
+    <string name="btn_convert">Convert</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_copy">Copy</string>
+
+    <string name="result_initial_placeholder">---</string>
+    <string name="result_formula_placeholder">Enter a number and tap Convert to see the result</string>
+
+    <!-- Toast Messages -->
+    <string name="toast_empty_input">Please enter a numeric value to convert</string>
+    <string name="toast_invalid_number">Please enter a valid number</string>
+    <string name="toast_result_copied">Converted result copied to clipboard!</string>
+    <string name="toast_units_swapped">Units swapped</string>
+    <string name="toast_temp_below_abs_zero">Invalid: Temperature cannot be below Absolute Zero</string>
+</resources>
