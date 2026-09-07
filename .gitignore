@@ -164,4 +164,5 @@ local.properties
 *.aab
 *.dex
 output.json
-
+target_cli_classes/
+target_test_classes/
