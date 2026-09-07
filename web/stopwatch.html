@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OIBSIP · Task 5: Stopwatch & Lap Timer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4338CA;
+      --primary-hover: #3730A3;
+      --bg: #0B0F19;
+      --surface: #1E293B;
+      --device-bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --color-start: #10B981;
+      --color-pause: #F59E0B;
+      --color-reset: #EF4444;
+      --shadow-phone: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 12px #1E293B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1E1B4B 0%, #0B0F19 70%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: #F8FAFC;
+    }
+
+    .top-banner { text-align: center; margin-bottom: 20px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3);
+      color: #A5B4FC; padding: 4px 14px; border-radius: 9999px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .top-banner h1 { font-size: 24px; font-weight: 800; color: #FFFFFF; }
+    .top-banner p { color: #94A3B8; font-size: 14px; margin-top: 4px; }
+
+    .nav-links {
+      display: flex; gap: 12px; justify-content: center; margin-top: 10px;
+    }
+    .nav-links a {
+      color: #A5B4FC; font-size: 13px; text-decoration: none; font-weight: 600;
+      background: rgba(255, 255, 255, 0.05); padding: 6px 14px; border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav-links a:hover { background: rgba(99, 102, 241, 0.2); }
+
+    .phone-container {
+      width: 100%; max-width: 412px; height: 800px;
+      background: var(--device-bg); border-radius: 44px;
+      box-shadow: var(--shadow-phone); display: flex; flex-direction: column;
+      overflow: hidden; position: relative; border: 4px solid #334155;
+    }
+
+    .status-bar {
+      height: 44px; display: flex; justify-content: space-between; align-items: center;
+      padding: 0 24px; font-size: 13px; font-weight: 600; color: var(--text-main);
+      background: transparent;
+    }
+
+    .app-header {
+      padding: 8px 24px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .app-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
+    .app-tagline { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+
+    .dial-card {
+      margin: 0 20px 16px; background: var(--card-bg); border-radius: 24px;
+      border: 1px solid var(--border); padding: 32px 16px; text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .state-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 9999px;
+      font-size: 11px; font-weight: 800; letter-spacing: 1px;
+      background: #EEF2FF; color: var(--primary); margin-bottom: 16px;
+    }
+
+    .time-readout {
+      font-family: 'JetBrains Mono', monospace;
+      display: flex; justify-content: center; align-items: baseline;
+    }
+    .time-main { font-size: 56px; font-weight: 800; color: var(--text-main); letter-spacing: -1px; }
+    .time-ms { font-size: 32px; font-weight: 700; color: var(--primary); }
+
+    .btn-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+      padding: 0 20px 16px;
+    }
+    .btn {
+      height: 48px; border: none; border-radius: 12px; font-weight: 700; font-size: 13px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-start { background: var(--color-start); color: #FFF; }
+    .btn-pause { background: var(--color-pause); color: #FFF; }
+    .btn-reset { background: #FEE2E2; color: var(--color-reset); border: 1px solid #FECACA; }
+    .btn-lap   { background: #EEF2FF; color: var(--primary); border: 1px solid #C7D2FE; }
+
+    .lap-section {
+      flex: 1; padding: 0 20px 16px; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .lap-header {
+      display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding: 0 4px;
+    }
+    .lap-list {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+    }
+    .lap-item {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    }
+    .lap-num { font-weight: 700; color: var(--primary); }
+    .lap-split { color: var(--text-muted); font-size: 12px; }
+    .lap-total { font-weight: 700; color: var(--text-main); }
+    .empty-state {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 13px; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <div class="badge">OIBSIP Internship Deliverable</div>
+    <h1>Task 5 · Stopwatch & Lap Timer</h1>
+    <p>Precision Stopwatch with Laps, Lifecycle Handling & Clean Material Design</p>
+    <div class="nav-links">
+      <a href="index.html">← Switch to Task 1: Unit Converter</a>
+    </div>
+  </div>
+
+  <div class="phone-container">
+    <div class="status-bar">
+      <span>09:41</span>
+      <span>📶 5G 100%</span>
+    </div>
+
+    <div class="app-header">
+      <div>
+        <div class="app-tagline">Oasis Infobyte · Task 5</div>
+        <div class="app-title">Stopwatch</div>
+      </div>
+    </div>
+
+    <div class="dial-card">
+      <div class="state-badge" id="stateBadge">READY</div>
+      <div class="time-readout">
+        <span class="time-main" id="timeMain">00:00</span>
+        <span class="time-ms" id="timeMs">.00</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-reset" id="btnReset" disabled>Reset</button>
+      <button class="btn btn-lap" id="btnLap" disabled>Lap</button>
+      <button class="btn btn-pause" id="btnPause" disabled>Pause</button>
+      <button class="btn btn-start" id="btnStart">Start</button>
+    </div>
+
+    <div class="lap-section">
+      <div class="lap-header">
+        <span>Lap History</span>
+        <span id="lapCountHeader">(0)</span>
+      </div>
+      <div class="empty-state" id="emptyState">
+        No laps recorded yet. Tap "Lap" while running.
+      </div>
+      <div class="lap-list" id="lapList" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    let state = 'STOPPED'; // 'STOPPED', 'RUNNING', 'PAUSED'
+    let startTime = 0;
+    let accumulatedElapsed = 0;
+    let lastLapElapsed = 0;
+    let timerInterval = null;
+    const laps = [];
+
+    const timeMain = document.getElementById('timeMain');
+    const timeMs = document.getElementById('timeMs');
+    const stateBadge = document.getElementById('stateBadge');
+    const btnStart = document.getElementById('btnStart');
+    const btnPause = document.getElementById('btnPause');
+    const btnReset = document.getElementById('btnReset');
+    const btnLap = document.getElementById('btnLap');
+    const lapList = document.getElementById('lapList');
+    const emptyState = document.getElementById('emptyState');
+    const lapCountHeader = document.getElementById('lapCountHeader');
+
+    function formatTimeParts(ms) {
+      if (ms < 0) ms = 0;
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      const centiseconds = Math.floor((ms % 1000) / 10);
+
+      const pad = (n) => n.toString().padStart(2, '0');
+      const main = hours > 0 
+        ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+        : `${pad(minutes)}:${pad(seconds)}`;
+      return { main, ms: `.${pad(centiseconds)}` };
+    }
+
+    function formatFull(ms) {
+      const parts = formatTimeParts(ms);
+      return parts.main + parts.ms;
+    }
+
+    function updateDisplay() {
+      const now = performance.now();
+      const elapsed = state === 'RUNNING' ? accumulatedElapsed + (now - startTime) : accumulatedElapsed;
+      const parts = formatTimeParts(elapsed);
+      timeMain.textContent = parts.main;
+      timeMs.textContent = parts.ms;
+    }
+
+    function setUiState() {
+      if (state === 'RUNNING') {
+        stateBadge.textContent = 'RUNNING';
+        stateBadge.style.color = '#10B981';
+        stateBadge.style.background = '#ECFDF5';
+        btnStart.disabled = true;
+        btnPause.disabled = false;
+        btnReset.disabled = true;
+        btnLap.disabled = false;
+      } else if (state === 'PAUSED') {
+        stateBadge.textContent = 'PAUSED';
+        stateBadge.style.color = '#F59E0B';
+        stateBadge.style.background = '#FFFBEB';
+        btnStart.disabled = false;
+        btnStart.textContent = 'Resume';
+        btnPause.disabled = true;
+        btnReset.disabled = false;
+        btnLap.disabled = true;
+      } else {
+        stateBadge.textContent = 'READY';
+        stateBadge.style.color = '#4338CA';
+        stateBadge.style.background = '#EEF2FF';
+        btnStart.disabled = false;
+        btnStart.textContent = 'Start';
+        btnPause.disabled = true;
+        btnReset.disabled = true;
+        btnLap.disabled = true;
+      }
+    }
+
+    btnStart.addEventListener('click', () => {
+      startTime = performance.now();
+      state = 'RUNNING';
+      timerInterval = setInterval(updateDisplay, 30);
+      setUiState();
+    });
+
+    btnPause.addEventListener('click', () => {
+      accumulatedElapsed += (performance.now() - startTime);
+      state = 'PAUSED';
+      clearInterval(timerInterval);
+      updateDisplay();
+      setUiState();
+    });
+
+    btnReset.addEventListener('click', () => {
+      state = 'STOPPED';
+      accumulatedElapsed = 0;
+      lastLapElapsed = 0;
+      laps.length = 0;
+      clearInterval(timerInterval);
+      timeMain.textContent = '00:00';
+      timeMs.textContent = '.00';
+      renderLaps();
+      setUiState();
+    });
+
+    btnLap.addEventListener('click', () => {
+      if (state !== 'RUNNING') return;
+      const now = performance.now();
+      const currentElapsed = accumulatedElapsed + (now - startTime);
+      const lapDuration = currentElapsed - lastLapElapsed;
+      lastLapElapsed = currentElapsed;
+
+      laps.unshift({
+        num: laps.length + 1,
+        duration: formatFull(lapDuration),
+        total: formatFull(currentElapsed)
+      });
+      renderLaps();
+    });
+
+    function renderLaps() {
+      lapCountHeader.textContent = `(${laps.length})`;
+      if (laps.length === 0) {
+        emptyState.style.display = 'flex';
+        lapList.style.display = 'none';
+        return;
+      }
+      emptyState.style.display = 'none';
+      lapList.style.display = 'flex';
+      lapList.innerHTML = '';
+
+      laps.forEach(lap => {
+        const div = document.createElement('div');
+        div.className = 'lap-item';
+        div.innerHTML = `
+          <span class="lap-num">Lap ${lap.num.toString().padStart(2, '0')}</span>
+          <span class="lap-split">+${lap.duration}</span>
+          <span class="lap-total">${lap.total}</span>
+        `;
+        lapList.appendChild(div);
+      });
+    }
+
+    setUiState();
+  </script>
+</body>
+</html>

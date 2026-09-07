@@ -28,4 +28,16 @@
     <string name="toast_result_copied">Converted result copied to clipboard!</string>
     <string name="toast_units_swapped">Units swapped</string>
     <string name="toast_temp_below_abs_zero">Invalid: Temperature cannot be below Absolute Zero</string>
+
+    <!-- Stopwatch Strings -->
+    <string name="stopwatch_app_name">Stopwatch</string>
+    <string name="stopwatch_tagline">Oasis Infobyte · Task 5</string>
+    <string name="stopwatch_initial_time">00:00</string>
+    <string name="stopwatch_initial_ms">.00</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_pause">Pause</string>
+    <string name="btn_resume">Resume</string>
+    <string name="btn_lap">Lap</string>
+    <string name="lap_history_title">Lap History</string>
+    <string name="no_laps_recorded">No laps recorded yet. Tap "Lap" while running.</string>
 </resources>

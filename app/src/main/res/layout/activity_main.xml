@@ -65,6 +65,17 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Navigation Button to Task 5 Stopwatch -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpenStopwatch"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="⏱️ Open Task 5 · Stopwatch App"
+            android:textSize="13sp"
+            app:cornerRadius="12dp" />
+
         <!-- Category Selector Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardCategory"

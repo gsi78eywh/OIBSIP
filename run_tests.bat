@@ -21,7 +21,7 @@ echo.
 if not exist "target_cli_classes" mkdir "target_cli_classes"
 
 echo [1/3] Compiling source and test files...
-"%JAVAC_EXE%" -cp "%JUNIT_JAR%;%HAMCREST_JAR%" -d "target_cli_classes" app/src/main/java/com/oibsip/unitconverter/model/*.java app/src/main/java/com/oibsip/unitconverter/converter/*.java app/src/test/java/com/oibsip/unitconverter/model/*.java app/src/test/java/com/oibsip/unitconverter/*.java
+"%JAVAC_EXE%" -cp "%JUNIT_JAR%;%HAMCREST_JAR%" -d "target_cli_classes" app/src/main/java/com/oibsip/unitconverter/model/*.java app/src/main/java/com/oibsip/unitconverter/converter/*.java app/src/test/java/com/oibsip/unitconverter/model/*.java app/src/test/java/com/oibsip/unitconverter/*.java app/src/main/java/com/oibsip/stopwatch/model/*.java app/src/main/java/com/oibsip/stopwatch/engine/*.java app/src/test/java/com/oibsip/stopwatch/*.java
 
 if errorlevel 1 (
     echo [ERROR] Compilation failed!
@@ -38,8 +38,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/3] Running JUnit 4 Test Suite...
-"%JAVA_EXE%" -cp "target_cli_classes;%JUNIT_JAR%;%HAMCREST_JAR%" org.junit.runner.JUnitCore com.oibsip.unitconverter.model.CategoryTest com.oibsip.unitconverter.model.UnitTest com.oibsip.unitconverter.UnitConverterTest com.oibsip.unitconverter.InteractiveConsoleRunnerTest
+echo [3/3] Running JUnit 4 Test Suite (Unit Converter + Stopwatch)...
+"%JAVA_EXE%" -cp "target_cli_classes;%JUNIT_JAR%;%HAMCREST_JAR%" org.junit.runner.JUnitCore com.oibsip.unitconverter.model.CategoryTest com.oibsip.unitconverter.model.UnitTest com.oibsip.unitconverter.UnitConverterTest com.oibsip.unitconverter.InteractiveConsoleRunnerTest com.oibsip.stopwatch.StopwatchEngineTest
 
 if errorlevel 1 (
     echo [FAIL] JUnit tests failed.

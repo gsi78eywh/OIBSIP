@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Interactive Console Runner for testing and demonstrating the Unit Converter application
- * directly in the terminal without needing an Android emulator or device.
+ * Lightweight, easy-to-read console runner for the Unit Converter.
+ * Supports both an interactive terminal menu and direct command-line arguments.
  */
 public class InteractiveConsoleRunner {
 
@@ -18,134 +18,81 @@ public class InteractiveConsoleRunner {
         System.out.println("   OIBSIP Task 1 - Unit Converter Application (CLI)      ");
         System.out.println("=========================================================");
 
+        // Mode 1: Quick CLI conversion (e.g., "100 m cm" or "0 °C °F")
         if (args.length == 3) {
-            // Quick CLI mode: <value> <fromUnitSymbolOrName> <toUnitSymbolOrName>
             handleDirectConversion(args[0], args[1], args[2]);
             return;
         }
 
+        // Mode 2: Interactive Menu
+        runInteractiveMenu();
+    }
+
+    /**
+     * Interactive terminal menu loop.
+     */
+    private static void runInteractiveMenu() {
         Scanner scanner = new Scanner(System.in);
+        Category[] categories = Category.values();
+
         while (true) {
-            System.out.println("\nSelect a Measurement Category:");
-            Category[] categories = Category.values();
+            System.out.println("\n--- Select Measurement Category ---");
             for (int i = 0; i < categories.length; i++) {
                 System.out.printf("  [%d] %s (%s)%n", i + 1, categories[i].getDisplayName(), categories[i].getDescription());
             }
-            System.out.println("  [T] Run All 34 Unit Verification Tests");
             System.out.println("  [0] Exit");
-            System.out.print("\nEnter choice: ");
+            System.out.print("Enter choice: ");
 
-            if (!scanner.hasNextLine()) {
-                break;
-            }
+            if (!scanner.hasNextLine()) break;
             String input = scanner.nextLine().trim();
-
             if (input.equals("0") || input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("q")) {
-                System.out.println("\nThank you for using the Unit Converter. Goodbye!");
+                System.out.println("Goodbye!");
                 break;
             }
 
-            if (input.equalsIgnoreCase("T")) {
-                System.out.println();
-                UnitConverterVerification.main(new String[0]);
+            int catIdx = parseIndex(input, categories.length);
+            if (catIdx == -1) {
+                System.out.println("Invalid category choice. Please try again.");
                 continue;
             }
 
-            int catIndex;
-            try {
-                catIndex = Integer.parseInt(input) - 1;
-                if (catIndex < 0 || catIndex >= categories.length) {
-                    System.out.println("Invalid category selection. Please try again.");
-                    continue;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number from the menu.");
-                continue;
-            }
-
-            Category selectedCategory = categories[catIndex];
+            Category selectedCategory = categories[catIdx];
             List<Unit> units = UnitConverter.getUnitsForCategory(selectedCategory);
 
             System.out.println("\nAvailable Units for " + selectedCategory.getDisplayName() + ":");
             for (int i = 0; i < units.size(); i++) {
-                Unit u = units.get(i);
-                System.out.printf("  [%d] %s%n", i + 1, u.getDisplayLabel());
+                System.out.printf("  [%d] %s%n", i + 1, units.get(i).getDisplayLabel());
             }
 
-            System.out.print("\nSelect Source (From) Unit [1-" + units.size() + "]: ");
-            int fromIndex = readUnitChoice(scanner, units.size());
-            if (fromIndex == -1) continue;
+            System.out.print("Select From Unit: ");
+            if (!scanner.hasNextLine()) break;
+            int fromIdx = parseIndex(scanner.nextLine(), units.size());
 
-            System.out.print("Select Target (To) Unit [1-" + units.size() + "]: ");
-            int toIndex = readUnitChoice(scanner, units.size());
-            if (toIndex == -1) continue;
+            System.out.print("Select To Unit: ");
+            if (!scanner.hasNextLine()) break;
+            int toIdx = parseIndex(scanner.nextLine(), units.size());
 
-            Unit fromUnit = units.get(fromIndex);
-            Unit toUnit = units.get(toIndex);
+            if (fromIdx == -1 || toIdx == -1) {
+                System.out.println("Invalid unit selection. Please try again.");
+                continue;
+            }
 
-            System.out.printf("\nEnter value to convert from %s to %s: ", fromUnit.getName(), toUnit.getName());
+            System.out.print("Enter value to convert: ");
             if (!scanner.hasNextLine()) break;
             String valStr = scanner.nextLine().trim();
 
-            try {
-                double val = Double.parseDouble(valStr);
-
-                if (UnitConverter.isBelowAbsoluteZero(val, fromUnit)) {
-                    System.out.println("\n[ERROR] Value is below absolute zero! Physical temperature limit reached.");
-                    continue;
-                }
-
-                double result = UnitConverter.convert(val, fromUnit, toUnit);
-                String formatted = UnitConverter.formatResult(result);
-                String formula = UnitConverter.getFormulaExplanation(val, fromUnit, result, toUnit);
-
-                System.out.println("\n---------------------------------------------------------");
-                System.out.println("  CONVERSION RESULT");
-                System.out.println("---------------------------------------------------------");
-                System.out.printf("  Input:   %s %s%n", UnitConverter.formatResult(val), fromUnit.getDisplayLabel());
-                System.out.printf("  Result:  %s %s%n", formatted, toUnit.getSymbol());
-                System.out.printf("  Formula: %s%n", formula);
-                System.out.println("---------------------------------------------------------");
-
-            } catch (NumberFormatException e) {
-                System.out.println("\n[ERROR] Invalid number format. Please enter a valid decimal number.");
-            }
+            handleDirectConversion(valStr, units.get(fromIdx).getId(), units.get(toIdx).getId());
         }
     }
 
-    private static int readUnitChoice(Scanner scanner, int max) {
-        if (!scanner.hasNextLine()) return -1;
-        String line = scanner.nextLine().trim();
-        try {
-            int val = Integer.parseInt(line) - 1;
-            if (val >= 0 && val < max) {
-                return val;
-            }
-        } catch (NumberFormatException ignored) {}
-        System.out.println("Invalid unit choice.");
-        return -1;
-    }
-
-    private static void handleDirectConversion(String valStr, String fromStr, String toStr) {
+    /**
+     * Executes conversion between two units, validates limits, and prints results.
+     */
+    public static void handleDirectConversion(String valStr, String fromStr, String toStr) {
         try {
             double val = Double.parseDouble(valStr);
-            Unit fromUnit = null;
-            Unit toUnit = null;
-
-            for (Category c : Category.values()) {
-                for (Unit u : UnitConverter.getUnitsForCategory(c)) {
-                    if (u.getId().equalsIgnoreCase(fromStr) ||
-                        u.getSymbol().equalsIgnoreCase(fromStr) ||
-                        u.getName().equalsIgnoreCase(fromStr)) {
-                        fromUnit = u;
-                    }
-                    if (u.getId().equalsIgnoreCase(toStr) ||
-                        u.getSymbol().equalsIgnoreCase(toStr) ||
-                        u.getName().equalsIgnoreCase(toStr)) {
-                        toUnit = u;
-                    }
-                }
-            }
+            Unit fromUnit = findUnit(fromStr);
+            Unit toUnit = findUnit(toStr);
 
             if (fromUnit == null || toUnit == null) {
                 System.out.println("[ERROR] Could not recognize one of the units: '" + fromStr + "' or '" + toStr + "'");
@@ -168,10 +115,43 @@ public class InteractiveConsoleRunner {
             String formula = UnitConverter.getFormulaExplanation(val, fromUnit, result, toUnit);
 
             System.out.printf("%s %s = %s %s%n", UnitConverter.formatResult(val), fromUnit.getSymbol(), formatted, toUnit.getSymbol());
-            System.out.println("Formula: " + formula);
+            if (formula.startsWith("Formula: ")) {
+                System.out.println(formula);
+            } else {
+                System.out.println("Formula: " + formula);
+            }
 
         } catch (NumberFormatException e) {
             System.out.println("[ERROR] Invalid numeric value: " + valStr);
+        }
+    }
+
+    /**
+     * Finds a Unit matching by ID, symbol, or name (case-insensitive).
+     */
+    private static Unit findUnit(String search) {
+        if (search == null || search.trim().isEmpty()) return null;
+        for (Category category : Category.values()) {
+            for (Unit unit : UnitConverter.getUnitsForCategory(category)) {
+                if (unit.getId().equalsIgnoreCase(search) ||
+                    unit.getSymbol().equalsIgnoreCase(search) ||
+                    unit.getName().equalsIgnoreCase(search)) {
+                    return unit;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Safely parses user 1-based index input into a 0-based integer.
+     */
+    private static int parseIndex(String text, int max) {
+        try {
+            int index = Integer.parseInt(text.trim()) - 1;
+            return (index >= 0 && index < max) ? index : -1;
+        } catch (Exception e) {
+            return -1;
         }
     }
 }

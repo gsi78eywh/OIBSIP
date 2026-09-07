@@ -35,4 +35,11 @@
     <color name="error">#DC2626</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <!-- Stopwatch Controls -->
+    <color name="stopwatch_start">#10B981</color>
+    <color name="stopwatch_pause">#F59E0B</color>
+    <color name="stopwatch_reset">#EF4444</color>
+    <color name="stopwatch_lap">#4338CA</color>
+    <color name="stopwatch_disabled">#94A3B8</color>
 </resources>

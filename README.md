@@ -100,5 +100,24 @@ OIBSIP/
    - Select a target device (Android Emulator or a physical phone via USB Debugging).
    - Click the green **Run** button (or press `Shift + F10`).
 4. **Run Unit Tests**:
-   - In Android Studio, navigate to `app/src/test/java/com/oibsip/unitconverter/UnitConverterTest.java`.
-   - Right-click the class and select **Run 'UnitConverterTest'**.
+   - In Android Studio, navigate to `app/src/test/java/com/oibsip/unitconverter/UnitConverterTest.java` or `StopwatchEngineTest.java`.
+   - Right-click the class and select **Run**.
+
+---
+
+## ⏱️ TASK 5 · Stopwatch Application
+
+### 🎯 Objective
+Build a functional, high-precision stopwatch app with start, stop/pause, reset, and lap recording controls that accurately tracks elapsed time across Android lifecycle events.
+
+### ✨ Feature Checklist
+- [x] **Large Digital Time Display**: Formatted in `MM:SS.cs` (or `HH:MM:SS.cs`) with 30ms real-time UI updates.
+- [x] **Start / Resume Button**: Begins timer from 0 or resumes from paused elapsed state.
+- [x] **Stop / Pause Button**: Freezes timer and preserves total accumulated time.
+- [x] **Reset Button**: Halts timer and clears display to `00:00.00` and clears lap history.
+- [x] **Dynamic Visual States**: Button colors and enabled/disabled states change dynamically based on stopwatch state (Ready / Running / Paused).
+- [x] **Lifecycle & Orientation Persistence**: Implements `onSaveInstanceState` and wall-clock time tracking via `SystemClock.uptimeMillis()` so timing is never lost when navigating away or rotating screen.
+- [x] **(Bonus) Lap Recording**: Records individual lap split duration and cumulative elapsed time in a scrollable list.
+- [x] **Desktop Windows App**: Runnable via `.\run_stopwatch.bat`.
+- [x] **Web Simulator**: Runnable in browser via `web/stopwatch.html`.
+

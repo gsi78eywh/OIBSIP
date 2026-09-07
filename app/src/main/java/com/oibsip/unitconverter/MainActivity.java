@@ -156,6 +156,14 @@ public class MainActivity extends AppCompatActivity {
         btnSwapUnits.setOnClickListener(v -> swapUnits());
         btnReset.setOnClickListener(v -> resetForm());
         btnCopyResult.setOnClickListener(v -> copyResultToClipboard());
+
+        View btnOpenStopwatch = findViewById(R.id.btnOpenStopwatch);
+        if (btnOpenStopwatch != null) {
+            btnOpenStopwatch.setOnClickListener(v -> {
+                Intent intent = new Intent(this, com.oibsip.stopwatch.StopwatchActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     // =========================================================================
