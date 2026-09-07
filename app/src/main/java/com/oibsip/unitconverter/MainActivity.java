@@ -4,7 +4,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -21,13 +23,45 @@ import com.oibsip.unitconverter.model.Unit;
 
 import java.util.List;
 
+/**
+ * MainActivity for the OIBSIP Unit Converter application.
+ * 
+ * Responsibilities:
+ * 1. Initialize and bind UI widgets from XML layout.
+ * 2. Populate Category and Unit dropdown spinners.
+ * 3. Validate user input (empty text, non-numeric, below absolute zero).
+ * 4. Execute conversion calculation via UnitConverter and display results.
+ * 5. Provide utility actions: Swap units, Reset form, and Copy result.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private Spinner spinnerCategory, spinnerFromUnit, spinnerToUnit;
+    private static final String TAG = "UnitConverterApp";
+
+    // Dropdown Spinners
+    private Spinner spinnerCategory;
+    private Spinner spinnerFromUnit;
+    private Spinner spinnerToUnit;
+
+    // Input Field
     private TextInputEditText etValueInput;
-    private MaterialButton btnConvert, btnSwapUnits, btnReset, btnCopyResult;
-    private TextView tvResultValue, tvResultUnit, tvResultFormula;
+
+    // Action Buttons
+    private MaterialButton btnConvert;
+    private MaterialButton btnSwapUnits;
+    private MaterialButton btnReset;
+    private MaterialButton btnCopyResult;
+
+    // Result Display Labels
+    private TextView tvResultValue;
+    private TextView tvResultUnit;
+    private TextView tvResultFormula;
+
+    // Stores formatted text for clipboard copying (e.g., "100 cm")
     private String lastResult = "";
+
+    // =========================================================================
+    // ACTIVITY LIFECYCLE
+    // =========================================================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,29 +73,49 @@ public class MainActivity extends AppCompatActivity {
         setupButtons();
     }
 
+    // =========================================================================
+    // UI INITIALIZATION & SETUP
+    // =========================================================================
+
+    /**
+     * Connects Java member variables to layout views declared in activity_main.xml.
+     */
     private void initViews() {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         spinnerFromUnit = findViewById(R.id.spinnerFromUnit);
-        spinnerToUnit = findViewById(R.id.spinnerToUnit);
-        etValueInput = findViewById(R.id.etValueInput);
-        btnConvert = findViewById(R.id.btnConvert);
-        btnSwapUnits = findViewById(R.id.btnSwapUnits);
-        btnReset = findViewById(R.id.btnReset);
-        btnCopyResult = findViewById(R.id.btnCopyResult);
-        tvResultValue = findViewById(R.id.tvResultValue);
-        tvResultUnit = findViewById(R.id.tvResultUnit);
+        spinnerToUnit   = findViewById(R.id.spinnerToUnit);
+        etValueInput    = findViewById(R.id.etValueInput);
+
+        btnConvert      = findViewById(R.id.btnConvert);
+        btnSwapUnits    = findViewById(R.id.btnSwapUnits);
+        btnReset        = findViewById(R.id.btnReset);
+        btnCopyResult   = findViewById(R.id.btnCopyResult);
+
+        tvResultValue   = findViewById(R.id.tvResultValue);
+        tvResultUnit    = findViewById(R.id.tvResultUnit);
         tvResultFormula = findViewById(R.id.tvResultFormula);
     }
 
+    /**
+     * Fills the category dropdown with all available measurement categories
+     * (Length, Weight, Temperature, Volume, Speed, Time).
+     */
     private void setupCategorySpinner() {
-        ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, Category.values());
+        ArrayAdapter<Category> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.item_spinner,
+                Category.values()
+        );
         adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerCategory.setAdapter(adapter);
 
+        // When user picks a category, populate the source and target unit dropdowns
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateUnitSpinners((Category) parent.getItemAtPosition(position));
+                Category selectedCategory = (Category) parent.getItemAtPosition(position);
+                Log.d(TAG, "User selected category: " + selectedCategory.getDisplayName());
+                updateUnitSpinners(selectedCategory);
             }
 
             @Override
@@ -69,86 +123,132 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Populates both the "From Unit" and "To Unit" dropdowns based on the chosen category.
+     */
     private void updateUnitSpinners(Category category) {
         List<Unit> units = UnitConverter.getUnitsForCategory(category);
-        ArrayAdapter<Unit> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, units);
-        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
 
-        spinnerFromUnit.setAdapter(adapter);
-        spinnerToUnit.setAdapter(adapter);
+        ArrayAdapter<Unit> unitAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.item_spinner,
+                units
+        );
+        unitAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
 
+        spinnerFromUnit.setAdapter(unitAdapter);
+        spinnerToUnit.setAdapter(unitAdapter);
+
+        // Set default selections (From = 1st unit, To = 2nd unit)
         if (units.size() > 1) {
             spinnerFromUnit.setSelection(0);
             spinnerToUnit.setSelection(1);
         }
+
         resetResult();
     }
 
+    /**
+     * Attaches click listeners to interactive action buttons.
+     */
     private void setupButtons() {
-        btnConvert.setOnClickListener(v -> convert());
-        btnSwapUnits.setOnClickListener(v -> swap());
-        btnReset.setOnClickListener(v -> reset());
-        btnCopyResult.setOnClickListener(v -> copy());
+        btnConvert.setOnClickListener(v -> performConversion());
+        btnSwapUnits.setOnClickListener(v -> swapUnits());
+        btnReset.setOnClickListener(v -> resetForm());
+        btnCopyResult.setOnClickListener(v -> copyResultToClipboard());
     }
 
-    private void convert() {
-        String text = etValueInput.getText() != null ? etValueInput.getText().toString().trim() : "";
+    // =========================================================================
+    // CORE USER ACTIONS
+    // =========================================================================
 
-        // Check if empty
-        if (text.isEmpty()) {
-            Toast.makeText(this, "Please enter a numeric value to convert", Toast.LENGTH_SHORT).show();
+    /**
+     * Validates input, computes conversion using UnitConverter, and updates UI.
+     */
+    private void performConversion() {
+        hideKeyboard();
+
+        String rawInput = etValueInput.getText() != null ? etValueInput.getText().toString().trim() : "";
+        Log.d(TAG, "Attempting conversion with input: '" + rawInput + "'");
+
+        // 1. Validation: Empty field
+        if (rawInput.isEmpty()) {
+            Log.w(TAG, "Validation failed: Input field is empty");
+            showToast("Please enter a numeric value to convert");
             return;
         }
 
-        // Check if numeric
+        // 2. Validation: Valid number format
         double value;
         try {
-            value = Double.parseDouble(text);
+            value = Double.parseDouble(rawInput);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter a valid number", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "Validation failed: Non-numeric value '" + rawInput + "'");
+            showToast("Please enter a valid number");
             return;
         }
 
         Unit fromUnit = (Unit) spinnerFromUnit.getSelectedItem();
-        Unit toUnit = (Unit) spinnerToUnit.getSelectedItem();
-        if (fromUnit == null || toUnit == null) return;
-
-        // Check temperature limits
-        if (UnitConverter.isBelowAbsoluteZero(value, fromUnit)) {
-            Toast.makeText(this, "Invalid: Temperature cannot be below Absolute Zero", Toast.LENGTH_SHORT).show();
+        Unit toUnit   = (Unit) spinnerToUnit.getSelectedItem();
+        if (fromUnit == null || toUnit == null) {
             return;
         }
 
-        // Calculate and display
+        // 3. Validation: Temperature absolute zero limit
+        if (UnitConverter.isBelowAbsoluteZero(value, fromUnit)) {
+            Log.w(TAG, "Validation failed: Temperature below Absolute Zero (" + value + " " + fromUnit.getSymbol() + ")");
+            showToast("Invalid: Temperature cannot be below Absolute Zero");
+            return;
+        }
+
+        // 4. Perform calculation
+        Log.d(TAG, "Converting: " + value + " " + fromUnit.getName() + " -> " + toUnit.getName());
         double result = UnitConverter.convert(value, fromUnit, toUnit);
         String formattedResult = UnitConverter.formatResult(result);
+        String formulaExplanation = UnitConverter.getFormulaExplanation(value, fromUnit, result, toUnit);
 
+        Log.d(TAG, "Conversion successful: " + formattedResult + " " + toUnit.getSymbol());
+        Log.d(TAG, "Formula: " + formulaExplanation);
+
+        // 5. Update UI with results
         tvResultValue.setText(formattedResult);
         tvResultUnit.setText(toUnit.getSymbol());
-        tvResultFormula.setText(UnitConverter.getFormulaExplanation(value, fromUnit, result, toUnit));
+        tvResultFormula.setText(formulaExplanation);
         lastResult = formattedResult + " " + toUnit.getSymbol();
     }
 
-    private void swap() {
-        int from = spinnerFromUnit.getSelectedItemPosition();
-        int to = spinnerToUnit.getSelectedItemPosition();
+    /**
+     * Swaps the selected source unit and target unit, and recalculates if value exists.
+     */
+    private void swapUnits() {
+        int fromPos = spinnerFromUnit.getSelectedItemPosition();
+        int toPos   = spinnerToUnit.getSelectedItemPosition();
 
-        if (from >= 0 && to >= 0) {
-            spinnerFromUnit.setSelection(to);
-            spinnerToUnit.setSelection(from);
-            Toast.makeText(this, "Units swapped", Toast.LENGTH_SHORT).show();
+        if (fromPos >= 0 && toPos >= 0) {
+            spinnerFromUnit.setSelection(toPos);
+            spinnerToUnit.setSelection(fromPos);
+            Log.d(TAG, "Swapped unit positions: " + fromPos + " <-> " + toPos);
+            showToast("Units swapped");
 
+            // Recalculate immediately if an input value is already entered
             if (etValueInput.getText() != null && !etValueInput.getText().toString().trim().isEmpty()) {
-                convert();
+                performConversion();
             }
         }
     }
 
-    private void reset() {
+    /**
+     * Clears input field and resets results card to initial blank state.
+     */
+    private void resetForm() {
         etValueInput.setText("");
         resetResult();
+        showToast("Form reset");
     }
 
+    /**
+     * Resets result card display text to placeholder state.
+     */
     private void resetResult() {
         tvResultValue.setText("---");
         tvResultUnit.setText("");
@@ -156,16 +256,38 @@ public class MainActivity extends AppCompatActivity {
         lastResult = "";
     }
 
-    private void copy() {
+    /**
+     * Copies the latest converted result to Android's system clipboard.
+     */
+    private void copyResultToClipboard() {
         if (lastResult.isEmpty()) {
-            Toast.makeText(this, "No result to copy", Toast.LENGTH_SHORT).show();
+            showToast("No result to copy");
             return;
         }
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard != null) {
-            clipboard.setPrimaryClip(ClipData.newPlainText("Result", lastResult));
-            Toast.makeText(this, "Converted result copied to clipboard!", Toast.LENGTH_SHORT).show();
+            clipboard.setPrimaryClip(ClipData.newPlainText("Conversion Result", lastResult));
+            Log.d(TAG, "Copied to clipboard: " + lastResult);
+            showToast("Copied to clipboard!");
+        }
+    }
+
+    // =========================================================================
+    // HELPER METHODS
+    // =========================================================================
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideKeyboard() {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
         }
     }
 }
