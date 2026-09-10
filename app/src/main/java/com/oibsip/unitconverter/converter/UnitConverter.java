@@ -35,10 +35,6 @@ public class UnitConverter {
         registerTimeUnits();
     }
 
-    // =========================================================================
-    // UNIT REGISTRATION HELPERS (Organized cleanly by category)
-    // =========================================================================
-
     private static void registerLengthUnits() {
         // Base Unit: Meter (m)
         List<Unit> units = new ArrayList<>();
@@ -107,13 +103,6 @@ public class UnitConverter {
         UNITS_MAP.put(Category.TIME, Collections.unmodifiableList(units));
     }
 
-    // =========================================================================
-    // PUBLIC API METHODS
-    // =========================================================================
-
-    /**
-     * Returns the unmodifiable list of units for a given category.
-     */
     public static List<Unit> getUnitsForCategory(Category category) {
         if (category == null) {
             return Collections.emptyList();

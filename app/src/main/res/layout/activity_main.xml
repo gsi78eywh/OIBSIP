@@ -65,16 +65,35 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Navigation Button to Task 5 Stopwatch -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOpenStopwatch"
-            style="@style/Widget.Material3.Button.TonalButton"
+        <!-- Navigation Buttons to Task 4 Quiz & Task 5 Stopwatch -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:text="⏱️ Open Task 5 · Stopwatch App"
-            android:textSize="13sp"
-            app:cornerRadius="12dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenQuiz"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:text="🧠 Task 4 · Quiz"
+                android:textSize="12sp"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOpenStopwatch"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="⏱️ Task 5 · Stopwatch"
+                android:textSize="12sp"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
 
         <!-- Category Selector Card -->
         <com.google.android.material.card.MaterialCardView

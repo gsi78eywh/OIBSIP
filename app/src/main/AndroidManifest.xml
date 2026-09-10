@@ -27,6 +27,25 @@
             android:exported="true"
             android:label="@string/stopwatch_app_name"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Task 4 Quiz Application Activities -->
+        <activity
+            android:name="com.oibsip.quiz.QuizWelcomeActivity"
+            android:exported="true"
+            android:label="@string/quiz_app_name"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="com.oibsip.quiz.QuizActivity"
+            android:exported="false"
+            android:label="@string/quiz_app_name"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="com.oibsip.quiz.QuizResultActivity"
+            android:exported="false"
+            android:label="@string/quiz_app_name"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

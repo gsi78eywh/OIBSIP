@@ -59,10 +59,6 @@ public class MainActivity extends AppCompatActivity {
     // Stores formatted text for clipboard copying (e.g., "100 cm")
     private String lastResult = "";
 
-    // =========================================================================
-    // ACTIVITY LIFECYCLE
-    // =========================================================================
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,13 +69,6 @@ public class MainActivity extends AppCompatActivity {
         setupButtons();
     }
 
-    // =========================================================================
-    // UI INITIALIZATION & SETUP
-    // =========================================================================
-
-    /**
-     * Connects Java member variables to layout views declared in activity_main.xml.
-     */
     private void initViews() {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         spinnerFromUnit = findViewById(R.id.spinnerFromUnit);
@@ -157,22 +146,25 @@ public class MainActivity extends AppCompatActivity {
         btnReset.setOnClickListener(v -> resetForm());
         btnCopyResult.setOnClickListener(v -> copyResultToClipboard());
 
+        View btnOpenQuiz = findViewById(R.id.btnOpenQuiz);
+        if (btnOpenQuiz != null) {
+            btnOpenQuiz.setOnClickListener(v -> {
+                Log.d(TAG, "Opening Task 4 Quiz App");
+                Intent intent = new Intent(this, com.oibsip.quiz.QuizWelcomeActivity.class);
+                startActivity(intent);
+            });
+        }
+
         View btnOpenStopwatch = findViewById(R.id.btnOpenStopwatch);
         if (btnOpenStopwatch != null) {
             btnOpenStopwatch.setOnClickListener(v -> {
+                Log.d(TAG, "Opening Task 5 Stopwatch App");
                 Intent intent = new Intent(this, com.oibsip.stopwatch.StopwatchActivity.class);
                 startActivity(intent);
             });
         }
     }
 
-    // =========================================================================
-    // CORE USER ACTIONS
-    // =========================================================================
-
-    /**
-     * Validates input, computes conversion using UnitConverter, and updates UI.
-     */
     private void performConversion() {
         hideKeyboard();
 
@@ -280,10 +272,6 @@ public class MainActivity extends AppCompatActivity {
             showToast("Copied to clipboard!");
         }
     }
-
-    // =========================================================================
-    // HELPER METHODS
-    // =========================================================================
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

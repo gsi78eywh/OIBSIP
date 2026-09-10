@@ -42,4 +42,17 @@
     <color name="stopwatch_reset">#EF4444</color>
     <color name="stopwatch_lap">#4338CA</color>
     <color name="stopwatch_disabled">#94A3B8</color>
+
+    <!-- Quiz Colors -->
+    <color name="quiz_correct">#10B981</color>
+    <color name="quiz_correct_light">#D1FAE5</color>
+    <color name="quiz_correct_border">#059669</color>
+    <color name="quiz_wrong">#EF4444</color>
+    <color name="quiz_wrong_light">#FEE2E2</color>
+    <color name="quiz_wrong_border">#DC2626</color>
+    <color name="quiz_gold">#F59E0B</color>
+    <color name="quiz_gold_light">#FEF3C7</color>
+    <color name="quiz_blue">#3B82F6</color>
+    <color name="quiz_blue_light">#DBEAFE</color>
+    <color name="quiz_option_border">#CBD5E1</color>
 </resources>

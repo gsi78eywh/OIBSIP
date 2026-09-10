@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OIBSIP · Task 4: Computer Science & Tech Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4338CA;
+      --primary-hover: #3730A3;
+      --primary-light: #EEF2FF;
+      --bg: #0B0F19;
+      --surface: #1E293B;
+      --device-bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --color-correct: #10B981;
+      --color-correct-bg: #D1FAE5;
+      --color-correct-border: #059669;
+      --color-wrong: #EF4444;
+      --color-wrong-bg: #FEE2E2;
+      --color-wrong-border: #DC2626;
+      --color-gold: #F59E0B;
+      --shadow-phone: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 12px #1E293B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1E1B4B 0%, #0B0F19 70%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: #F8FAFC;
+    }
+
+    .top-banner { text-align: center; margin-bottom: 20px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3);
+      color: #A5B4FC; padding: 4px 14px; border-radius: 9999px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .top-banner h1 { font-size: 24px; font-weight: 800; color: #FFFFFF; }
+    .top-banner p { color: #94A3B8; font-size: 14px; margin-top: 4px; }
+
+    .nav-links {
+      display: flex; gap: 12px; justify-content: center; margin-top: 10px;
+    }
+    .nav-links a {
+      color: #A5B4FC; font-size: 13px; text-decoration: none; font-weight: 600;
+      background: rgba(255, 255, 255, 0.05); padding: 6px 14px; border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+    .nav-links a:hover { background: rgba(99, 102, 241, 0.2); }
+    .nav-links a.active {
+      background: var(--primary); color: #FFFFFF; border-color: var(--primary);
+    }
+
+    /* Mobile Device Frame */
+    .phone-container {
+      width: 100%; max-width: 412px; height: 780px;
+      background: var(--device-bg); border-radius: 44px;
+      box-shadow: var(--shadow-phone); display: flex; flex-direction: column;
+      overflow: hidden; position: relative; border: 4px solid #334155;
+    }
+
+    .status-bar {
+      height: 44px; display: flex; justify-content: space-between; align-items: center;
+      padding: 0 24px; font-size: 13px; font-weight: 600; color: var(--text-main);
+      background: transparent; z-index: 10;
+    }
+
+    .app-screen {
+      flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 16px 20px 24px;
+    }
+
+    /* Common Card Styles */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 18px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .btn {
+      width: 100%; height: 50px; border-radius: 14px; border: none;
+      font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--primary); color: #FFFFFF;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover); transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      opacity: 0.45; cursor: not-allowed;
+    }
+    .btn-outlined {
+      background: #FFFFFF; color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .btn-outlined:hover {
+      background: #F1F5F9; color: var(--text-main);
+    }
+
+    /* Screen 1: Welcome */
+    #screen-welcome {
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .hero-box {
+      text-align: center; margin-top: 10px;
+    }
+    .hero-icon {
+      font-size: 52px; margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;
+    }
+    .hero-sub {
+      font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-bottom: 18px;
+    }
+    .high-score-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--primary-light); color: var(--primary);
+      padding: 6px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700;
+    }
+    .rules-list {
+      list-style: none; font-size: 13px; color: var(--text-muted); margin-top: 16px;
+      display: flex; flex-direction: column; gap: 8px; text-align: left;
+    }
+
+    /* Screen 2: Question */
+    #screen-question { display: none; }
+    .status-row {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    }
+    .counter-label {
+      font-size: 13px; font-weight: 700; color: var(--primary);
+    }
+    .score-label {
+      background: var(--primary-light); color: var(--primary);
+      font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 9999px;
+    }
+    .progress-track {
+      width: 100%; height: 7px; background: var(--border); border-radius: 9999px; overflow: hidden; margin-bottom: 14px;
+    }
+    .progress-bar {
+      height: 100%; background: var(--primary); width: 10%; transition: width 0.3s ease;
+    }
+    .category-chip {
+      font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .question-prompt {
+      font-size: 16px; font-weight: 700; color: var(--text-main); line-height: 1.35;
+    }
+
+    .options-list {
+      display: flex; flex-direction: column; gap: 10px; margin: 16px 0;
+    }
+    .option-btn {
+      width: 100%; min-height: 48px; background: #FFFFFF; border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+      cursor: pointer; text-align: left; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: var(--text-main); transition: all 0.15s ease;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary); background: #F8FAFC;
+    }
+    .option-btn:disabled {
+      cursor: default;
+    }
+    .option-prefix {
+      width: 26px; height: 26px; border-radius: 9999px; background: var(--primary-light);
+      color: var(--primary); font-size: 12px; font-weight: 700; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .option-text { flex: 1; line-height: 1.25; }
+    .option-icon { font-size: 18px; display: none; }
+
+    .option-btn.correct {
+      background: var(--color-correct-bg) !important;
+      border-color: var(--color-correct-border) !important;
+      color: #065F46 !important;
+    }
+    .option-btn.correct .option-icon { display: inline-block; color: var(--color-correct-border); }
+
+    .option-btn.wrong {
+      background: var(--color-wrong-bg) !important;
+      border-color: var(--color-wrong-border) !important;
+      color: #991B1B !important;
+    }
+    .option-btn.wrong .option-icon { display: inline-block; color: var(--color-wrong-border); }
+
+    .explanation-card {
+      background: #FFFFFF; border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; margin-bottom: 16px; display: none; animation: fadeIn 0.25s ease;
+    }
+    .explanation-title {
+      font-size: 13px; font-weight: 700; margin-bottom: 4px;
+    }
+    .explanation-text {
+      font-size: 12px; color: var(--text-muted); line-height: 1.35;
+    }
+
+    /* Screen 3: Result */
+    #screen-result { display: none; text-align: center; }
+    .result-hero {
+      padding: 24px 16px; margin: 10px 0 18px;
+    }
+    .trophy-icon { font-size: 54px; margin-bottom: 8px; }
+    .score-percent {
+      font-size: 42px; font-weight: 800; color: var(--primary); margin-bottom: 4px;
+    }
+    .score-grade {
+      font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;
+    }
+    .score-feedback {
+      font-size: 13px; color: var(--text-muted); line-height: 1.35; margin-bottom: 12px;
+    }
+    .high-score-banner {
+      display: inline-block; background: #FEF3C7; color: #B45309;
+      font-size: 12px; font-weight: 800; padding: 4px 14px; border-radius: 9999px;
+    }
+
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #FFFFFF; border: 1px solid var(--border); border-radius: 14px;
+      padding: 12px 6px;
+    }
+    .stat-card.correct { background: var(--color-correct-bg); border-color: var(--color-correct-border); }
+    .stat-card.wrong { background: var(--color-wrong-bg); border-color: var(--color-wrong-border); }
+    .stat-val { font-size: 20px; font-weight: 800; }
+    .stat-val.c { color: var(--color-correct-border); }
+    .stat-val.w { color: var(--color-wrong-border); }
+    .stat-val.t { color: var(--text-main); }
+    .stat-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="top-banner">
+    <div class="badge">Oasis Infobyte · Task 4</div>
+    <h1>Computer Science &amp; Tech Quiz</h1>
+    <p>Multiple-Choice Quiz Application with Instant Feedback</p>
+    <div class="nav-links">
+      <a href="index.html">Task 1: Unit Converter</a>
+      <a href="quiz.html" class="active">Task 4: Quiz App</a>
+      <a href="stopwatch.html">Task 5: Stopwatch</a>
+    </div>
+  </div>
+
+  <!-- Mobile Device Simulation Frame -->
+  <div class="phone-container">
+    <div class="status-bar">
+      <span id="live-time">9:41</span>
+      <span>●●● 5G 100%</span>
+    </div>
+
+    <!-- 1. Welcome Screen -->
+    <div id="screen-welcome" class="app-screen">
+      <div class="hero-box">
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="hero-icon">🧠</div>
+          <div class="hero-title">Computer Science Quiz</div>
+          <p class="hero-sub">
+            Test your knowledge across programming, computer hardware, data structures, and tech fundamentals!
+          </p>
+          <div class="high-score-badge" id="welcome-best-badge">
+            🏆 Personal Best: <span id="welcome-best-val">None yet</span>
+          </div>
+        </div>
+
+        <div class="card" style="text-align: left;">
+          <div style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+            Quiz Rules &amp; Format
+          </div>
+          <ul class="rules-list">
+            <li>• 10 randomized multiple-choice questions</li>
+            <li>• Instant visual feedback (Green = Right, Red = Wrong)</li>
+            <li>• Detailed explanations revealed for each answer</li>
+            <li>• Track your accuracy and beat your high score!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="btn btn-primary" id="btn-start-quiz">
+          🚀 Start Quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Question Screen -->
+    <div id="screen-question" class="app-screen">
+      <div>
+        <div class="status-row">
+          <span class="counter-label" id="lbl-counter">Question 1 of 10</span>
+          <span class="score-label" id="lbl-score">Score: 0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="category-chip" id="lbl-category">Computer Hardware · Easy</div>
+      </div>
+
+      <div class="card" style="margin-top: 4px;">
+        <div class="question-prompt" id="lbl-prompt">
+          Question prompt goes here?
+        </div>
+      </div>
+
+      <div class="options-list" id="options-container">
+        <!-- 4 Option Buttons generated dynamically -->
+      </div>
+
+      <div class="explanation-card" id="explanation-box">
+        <div class="explanation-title" id="explanation-title">✅ Correct Answer</div>
+        <div class="explanation-text" id="explanation-text">Explanation goes here.</div>
+      </div>
+
+      <div style="margin-top: auto;">
+        <button class="btn btn-primary" id="btn-next" disabled>
+          Next Question
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Result Screen -->
+    <div id="screen-result" class="app-screen">
+      <div class="card result-hero">
+        <div class="trophy-icon">🏆</div>
+        <div class="score-percent" id="res-percent">80%</div>
+        <div class="score-grade" id="res-grade">Great Job!</div>
+        <div class="score-feedback" id="res-feedback">
+          Solid performance! You answered most questions accurately.
+        </div>
+        <div class="high-score-banner" id="res-high-banner" style="display: none;">
+          🎉 NEW PERSONAL BEST!
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card correct">
+          <div class="stat-val c" id="stat-correct">8</div>
+          <div class="stat-lbl">Correct</div>
+        </div>
+        <div class="stat-card wrong">
+          <div class="stat-val w" id="stat-wrong">2</div>
+          <div class="stat-lbl">Incorrect</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val t" id="stat-total">10</div>
+          <div class="stat-lbl">Total</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto;">
+        <button class="btn btn-primary" id="btn-restart">
+          🔄 Restart Quiz
+        </button>
+        <button class="btn btn-outlined" id="btn-back-menu">
+          Back to Menu
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('live-time').textContent = `${h}:${m}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 15 Curated Questions Matching Java QuestionBank
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        question: "What does CPU stand for in computer systems?",
+        options: ["Central Processing Unit", "Central Process Utility", "Computer Primary Unit", "Core Program Unit"],
+        correctIndex: 0,
+        explanation: "CPU stands for Central Processing Unit, the primary hardware component that executes computer program instructions.",
+        category: "Computer Hardware", difficulty: "Easy"
+      },
+      {
+        id: 2,
+        question: "Which data structure operates on a Last-In, First-Out (LIFO) principle?",
+        options: ["Queue", "Stack", "Array", "Binary Search Tree"],
+        correctIndex: 1,
+        explanation: "A Stack follows the LIFO order, where the most recently added item is the first one removed.",
+        category: "Data Structures", difficulty: "Easy"
+      },
+      {
+        id: 3,
+        question: "Who is widely recognized as the father of modern Computer Science?",
+        options: ["Charles Babbage", "Alan Turing", "John von Neumann", "Ada Lovelace"],
+        correctIndex: 1,
+        explanation: "Alan Turing formalized algorithm and computation concepts with the Turing Machine and played a pivotal role in cracking Enigma.",
+        category: "History of Computing", difficulty: "Medium"
+      },
+      {
+        id: 4,
+        question: "Which programming language was developed by James Gosling at Sun Microsystems in 1995?",
+        options: ["Python", "C++", "Java", "C#"],
+        correctIndex: 2,
+        explanation: "Java was created by James Gosling at Sun Microsystems in 1995 under the motto 'Write Once, Run Anywhere'.",
+        category: "Programming Languages", difficulty: "Easy"
+      },
+      {
+        id: 5,
+        question: "What is the time complexity of searching in a balanced Binary Search Tree (BST)?",
+        options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
+        correctIndex: 2,
+        explanation: "Because a balanced BST halves the search space at each level, searching requires logarithmic time: O(log n).",
+        category: "Algorithms", difficulty: "Medium"
+      },
+      {
+        id: 6,
+        question: "What protocol is used to securely encrypt web traffic between browser and server?",
+        options: ["FTP", "HTTPS (SSL/TLS)", "SMTP", "SNMP"],
+        correctIndex: 1,
+        explanation: "HTTPS uses TLS/SSL (Transport Layer Security) encryption to protect HTTP communications against eavesdropping.",
+        category: "Networking", difficulty: "Easy"
+      },
+      {
+        id: 7,
+        question: "In OOP, what concept allows a subclass to provide a specific implementation of a parent method?",
+        options: ["Method Overriding", "Method Overloading", "Encapsulation", "Data Abstraction"],
+        correctIndex: 0,
+        explanation: "Method Overriding allows a child class to rewrite an inherited method at runtime (dynamic polymorphism).",
+        category: "OOP Concepts", difficulty: "Medium"
+      },
+      {
+        id: 8,
+        question: "What does SQL stand for in database management?",
+        options: ["Simple Query Language", "Structured Query Language", "Standard Question Lexicon", "Sequential Query Logic"],
+        correctIndex: 1,
+        explanation: "SQL stands for Structured Query Language, the ANSI/ISO standard for querying relational databases.",
+        category: "Databases", difficulty: "Easy"
+      },
+      {
+        id: 9,
+        question: "Which type of primary computer memory is volatile and loses its data when powered off?",
+        options: ["ROM", "SSD", "RAM", "Optical Disk"],
+        correctIndex: 2,
+        explanation: "RAM (Random Access Memory) is volatile memory that requires continuous electrical power to maintain stored data.",
+        category: "Computer Hardware", difficulty: "Easy"
+      },
+      {
+        id: 10,
+        question: "What does an IP address stand for in computer networking?",
+        options: ["Internal Provider", "Internet Protocol", "Interconnect Pathway", "Interface Point"],
+        correctIndex: 1,
+        explanation: "An IP address (Internet Protocol address) is a unique numerical label assigned to each connected network device.",
+        category: "Networking", difficulty: "Easy"
+      },
+      {
+        id: 11,
+        question: "In Git version control, which command records local staged changes with a message?",
+        options: ["git pull", "git commit", "git checkout", "git branch"],
+        correctIndex: 1,
+        explanation: "'git commit' creates a snapshot of staged changes along with a descriptive commit message.",
+        category: "Developer Tools", difficulty: "Easy"
+      },
+      {
+        id: 12,
+        question: "Which of the following is NOT an Operating System?",
+        options: ["Linux", "macOS", "Windows", "Apache"],
+        correctIndex: 3,
+        explanation: "Apache is an open-source HTTP web server software application, not an operating system.",
+        category: "System Software", difficulty: "Easy"
+      },
+      {
+        id: 13,
+        question: "What is the primary purpose of AndroidManifest.xml in Android apps?",
+        options: ["To style UI elements", "To declare components, permissions, and app metadata", "To compile Java bytecode", "To manage Gradle dependencies"],
+        correctIndex: 1,
+        explanation: "The AndroidManifest.xml declares essential information about the application, including activities and permissions.",
+        category: "Android Development", difficulty: "Medium"
+      },
+      {
+        id: 14,
+        question: "In binary, what decimal value does the 8-bit byte 00001010 represent?",
+        options: ["8", "10", "12", "16"],
+        correctIndex: 1,
+        explanation: "In binary: (1 * 8) + (1 * 2) = 8 + 2 = 10.",
+        category: "Digital Logic", difficulty: "Medium"
+      },
+      {
+        id: 15,
+        question: "Which sorting algorithm consistently achieves an average and worst-case time of O(n log n)?",
+        options: ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"],
+        correctIndex: 2,
+        explanation: "Merge Sort uses divide-and-conquer to consistently achieve O(n log n) in all cases.",
+        category: "Algorithms", difficulty: "Medium"
+      }
+    ];
+
+    // Quiz Session State
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let answerSubmitted = false;
+    let personalBest = localStorage.getItem('oibsip_quiz_high_score') || -1;
+
+    // DOM Elements
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenQuestion = document.getElementById('screen-question');
+    const screenResult = document.getElementById('screen-result');
+
+    const welcomeBestVal = document.getElementById('welcome-best-val');
+    const btnStartQuiz = document.getElementById('btn-start-quiz');
+
+    const lblCounter = document.getElementById('lbl-counter');
+    const lblScore = document.getElementById('lbl-score');
+    const progressBar = document.getElementById('progress-bar');
+    const lblCategory = document.getElementById('lbl-category');
+    const lblPrompt = document.getElementById('lbl-prompt');
+    const optionsContainer = document.getElementById('options-container');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+    const btnNext = document.getElementById('btn-next');
+
+    const resPercent = document.getElementById('res-percent');
+    const resGrade = document.getElementById('res-grade');
+    const resFeedback = document.getElementById('res-feedback');
+    const resHighBanner = document.getElementById('res-high-banner');
+    const statCorrect = document.getElementById('stat-correct');
+    const statWrong = document.getElementById('stat-wrong');
+    const statTotal = document.getElementById('stat-total');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnBackMenu = document.getElementById('btn-back-menu');
+
+    // Update Welcome Personal Best
+    function refreshPersonalBestDisplay() {
+      if (personalBest >= 0) {
+        welcomeBestVal.textContent = `${personalBest}%`;
+      } else {
+        welcomeBestVal.textContent = 'None yet';
+      }
+    }
+    refreshPersonalBestDisplay();
+
+    // Start Quiz
+    btnStartQuiz.addEventListener('click', () => {
+      startQuiz();
+    });
+
+    function startQuiz() {
+      // Sample 10 randomized questions
+      const pool = [...QUESTION_BANK].sort(() => Math.random() - 0.5);
+      const sampled = pool.slice(0, 10);
+
+      // Shuffle options inside each question while preserving correct index
+      currentQuestions = sampled.map(q => {
+        const correctText = q.options[q.correctIndex];
+        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
+        const newCorrectIndex = shuffledOpts.indexOf(correctText);
+        return {
+          ...q,
+          options: shuffledOpts,
+          correctIndex: newCorrectIndex
+        };
+      });
+
+      currentIndex = 0;
+      score = 0;
+      answerSubmitted = false;
+
+      screenWelcome.style.display = 'none';
+      screenResult.style.display = 'none';
+      screenQuestion.style.display = 'flex';
+
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      answerSubmitted = false;
+      const q = currentQuestions[currentIndex];
+      const curNum = currentIndex + 1;
+      const total = currentQuestions.length;
+
+      lblCounter.textContent = `Question ${curNum} of ${total}`;
+      lblScore.textContent = `Score: ${score}`;
+      progressBar.style.width = `${(curNum / total) * 100}%`;
+      lblCategory.textContent = `${q.category} · ${q.difficulty}`;
+      lblPrompt.textContent = q.question;
+
+      explanationBox.style.display = 'none';
+      btnNext.disabled = true;
+      btnNext.textContent = (currentIndex + 1 < total) ? "Next Question" : "View Results";
+
+      // Render 4 options
+      optionsContainer.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="option-prefix">${letters[idx]}</span>
+          <span class="option-text">${optText}</span>
+          <span class="option-icon"></span>
+        `;
+        btn.addEventListener('click', () => handleOptionClick(idx));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleOptionClick(selectedIndex) {
+      if (answerSubmitted) return;
+      answerSubmitted = true;
+
+      const q = currentQuestions[currentIndex];
+      const isCorrect = selectedIndex === q.correctIndex;
+      if (isCorrect) score++;
+
+      lblScore.textContent = `Score: ${score}`;
+
+      const optionButtons = optionsContainer.querySelectorAll('.option-btn');
+      optionButtons.forEach((btn, idx) => {
+        btn.disabled = true;
+        const icon = btn.querySelector('.option-icon');
+
+        if (idx === selectedIndex) {
+          if (isCorrect) {
+            btn.classList.add('correct');
+            icon.textContent = '✅';
+          } else {
+            btn.classList.add('wrong');
+            icon.textContent = '❌';
+          }
+        } else if (idx === q.correctIndex) {
+          // Reveal correct answer if user got it wrong
+          btn.classList.add('correct');
+          icon.textContent = '✅';
+        }
+      });
+
+      // Show explanation
+      explanationBox.style.display = 'block';
+      if (isCorrect) {
+        explanationTitle.textContent = '✅ Correct Answer';
+        explanationTitle.style.color = 'var(--color-correct-border)';
+      } else {
+        explanationTitle.textContent = '❌ Incorrect';
+        explanationTitle.style.color = 'var(--color-wrong-border)';
+      }
+      explanationText.textContent = q.explanation;
+
+      btnNext.disabled = false;
+    }
+
+    btnNext.addEventListener('click', () => {
+      if (currentIndex + 1 < currentQuestions.length) {
+        currentIndex++;
+        displayQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      screenQuestion.style.display = 'none';
+      screenResult.style.display = 'flex';
+
+      const total = currentQuestions.length;
+      const pct = Math.round((score / total) * 100);
+
+      resPercent.textContent = `${pct}%`;
+      statCorrect.textContent = score;
+      statWrong.textContent = total - score;
+      statTotal.textContent = total;
+
+      if (pct >= 90) {
+        resGrade.textContent = "Outstanding!";
+        resFeedback.textContent = "Mastery achieved! You have an exceptional grasp of the material.";
+      } else if (pct >= 70) {
+        resGrade.textContent = "Great Job!";
+        resFeedback.textContent = "Solid performance! You answered most questions accurately.";
+      } else if (pct >= 50) {
+        resGrade.textContent = "Good Effort!";
+        resFeedback.textContent = "Decent start! A quick review will push your score even higher.";
+      } else {
+        resGrade.textContent = "Keep Practicing!";
+        resFeedback.textContent = "Don't give up! Try again to reinforce your knowledge.";
+      }
+
+      if (pct > personalBest && pct > 0) {
+        personalBest = pct;
+        localStorage.setItem('oibsip_quiz_high_score', personalBest);
+        resHighBanner.style.display = 'inline-block';
+        refreshPersonalBestDisplay();
+      } else {
+        resHighBanner.style.display = 'none';
+      }
+    }
+
+    btnRestart.addEventListener('click', () => {
+      startQuiz();
+    });
+
+    btnBackMenu.addEventListener('click', () => {
+      screenResult.style.display = 'none';
+      screenQuestion.style.display = 'none';
+      screenWelcome.style.display = 'flex';
+      refreshPersonalBestDisplay();
+    });
+  </script>
+</body>
+</html>

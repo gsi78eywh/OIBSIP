@@ -21,23 +21,12 @@ import com.oibsip.stopwatch.model.LapItem;
 
 import java.util.ArrayList;
 
-/**
- * Android Activity for TASK 5: Stopwatch Application.
- * 
- * Features:
- * - Large high-contrast digital display (MM:SS.cs / HH:MM:SS.cs).
- * - Start / Resume, Pause, Reset, and Lap recording controls.
- * - Dynamic visual button state indicators (enabled/disabled styles).
- * - Android Handler & Runnable 30ms high-precision UI thread updater.
- * - Activity lifecycle handling (pause/resume & onSaveInstanceState rotation support).
- */
 public class StopwatchActivity extends AppCompatActivity {
 
     private final StopwatchEngine engine = new StopwatchEngine();
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable updateTimerRunnable;
+    private Runnable tickerRunnable;
 
-    // UI Widgets
     private TextView tvMainDigits;
     private TextView tvCentiseconds;
     private TextView tvStateBadge;
@@ -45,7 +34,6 @@ public class StopwatchActivity extends AppCompatActivity {
     private TextView tvNoLaps;
     private ListView lvLaps;
 
-    // Buttons
     private MaterialButton btnStart;
     private MaterialButton btnPause;
     private MaterialButton btnReset;
@@ -55,7 +43,6 @@ public class StopwatchActivity extends AppCompatActivity {
     private LapAdapter lapAdapter;
     private final ArrayList<LapItem> lapList = new ArrayList<>();
 
-    // Keys for lifecycle state saving
     private static final String KEY_STATE = "stopwatch_state";
     private static final String KEY_ACCUMULATED = "stopwatch_accumulated";
     private static final String KEY_START_TIME = "stopwatch_start_time";
@@ -68,28 +55,28 @@ public class StopwatchActivity extends AppCompatActivity {
         initViews();
         setupLapList();
         setupButtons();
-        setupTickerRunnable();
+        setupTicker();
 
         if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState);
+            restoreState(savedInstanceState);
         } else {
             updateUiState();
         }
     }
 
     private void initViews() {
-        tvMainDigits           = findViewById(R.id.tvMainDigits);
-        tvCentiseconds         = findViewById(R.id.tvCentiseconds);
-        tvStateBadge           = findViewById(R.id.tvStateBadge);
-        tvLapCount             = findViewById(R.id.tvLapCount);
-        tvNoLaps               = findViewById(R.id.tvNoLaps);
-        lvLaps                 = findViewById(R.id.lvLaps);
+        tvMainDigits         = findViewById(R.id.tvMainDigits);
+        tvCentiseconds       = findViewById(R.id.tvCentiseconds);
+        tvStateBadge         = findViewById(R.id.tvStateBadge);
+        tvLapCount           = findViewById(R.id.tvLapCount);
+        tvNoLaps             = findViewById(R.id.tvNoLaps);
+        lvLaps               = findViewById(R.id.lvLaps);
 
-        btnStart               = findViewById(R.id.btnStart);
-        btnPause               = findViewById(R.id.btnPause);
-        btnReset               = findViewById(R.id.btnReset);
-        btnLap                 = findViewById(R.id.btnLap);
-        btnSwitchToConverter   = findViewById(R.id.btnSwitchToConverter);
+        btnStart             = findViewById(R.id.btnStart);
+        btnPause             = findViewById(R.id.btnPause);
+        btnReset             = findViewById(R.id.btnReset);
+        btnLap               = findViewById(R.id.btnLap);
+        btnSwitchToConverter = findViewById(R.id.btnSwitchToConverter);
     }
 
     private void setupLapList() {
@@ -103,43 +90,42 @@ public class StopwatchActivity extends AppCompatActivity {
         btnReset.setOnClickListener(v -> onResetClicked());
         btnLap.setOnClickListener(v -> onLapClicked());
 
-        btnSwitchToConverter.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
+        if (btnSwitchToConverter != null) {
+            btnSwitchToConverter.setOnClickListener(v -> {
+                startActivity(new Intent(this, MainActivity.class));
+            });
+        }
     }
 
-    private void setupTickerRunnable() {
-        updateTimerRunnable = new Runnable() {
+    private void setupTicker() {
+        tickerRunnable = new Runnable() {
             @Override
             public void run() {
                 if (engine.isRunning()) {
                     long now = SystemClock.uptimeMillis();
                     long elapsed = engine.getElapsedTime(now);
+
                     tvMainDigits.setText(StopwatchEngine.formatMainDigits(elapsed));
                     tvCentiseconds.setText(StopwatchEngine.formatCentiseconds(elapsed));
-                    handler.postDelayed(this, 30); // ~33 FPS smooth refresh
+
+                    handler.postDelayed(this, 30);
                 }
             }
         };
     }
 
-    // =========================================================================
-    // USER ACTIONS
-    // =========================================================================
-
     private void onStartClicked() {
         long now = SystemClock.uptimeMillis();
         engine.start(now);
-        handler.removeCallbacks(updateTimerRunnable);
-        handler.post(updateTimerRunnable);
+        handler.removeCallbacks(tickerRunnable);
+        handler.post(tickerRunnable);
         updateUiState();
     }
 
     private void onPauseClicked() {
         long now = SystemClock.uptimeMillis();
         engine.pause(now);
-        handler.removeCallbacks(updateTimerRunnable);
+        handler.removeCallbacks(tickerRunnable);
 
         long elapsed = engine.getElapsedTime(now);
         tvMainDigits.setText(StopwatchEngine.formatMainDigits(elapsed));
@@ -149,7 +135,7 @@ public class StopwatchActivity extends AppCompatActivity {
 
     private void onResetClicked() {
         engine.reset();
-        handler.removeCallbacks(updateTimerRunnable);
+        handler.removeCallbacks(tickerRunnable);
 
         tvMainDigits.setText(R.string.stopwatch_initial_time);
         tvCentiseconds.setText(R.string.stopwatch_initial_ms);
@@ -169,10 +155,6 @@ public class StopwatchActivity extends AppCompatActivity {
         }
     }
 
-    // =========================================================================
-    // DYNAMIC UI & BUTTON STATE
-    // =========================================================================
-
     private void updateUiState() {
         StopwatchEngine.State state = engine.getState();
 
@@ -180,59 +162,41 @@ public class StopwatchActivity extends AppCompatActivity {
             case RUNNING:
                 tvStateBadge.setText("RUNNING");
                 tvStateBadge.setTextColor(getColor(R.color.stopwatch_start));
-
-                btnStart.setEnabled(false);
-                btnStart.setAlpha(0.4f);
-
-                btnPause.setEnabled(true);
-                btnPause.setAlpha(1.0f);
-
-                btnReset.setEnabled(false);
-                btnReset.setAlpha(0.4f);
-
-                btnLap.setEnabled(true);
-                btnLap.setAlpha(1.0f);
+                setButton(btnStart, false, 0.4f, R.string.btn_start);
+                setButton(btnPause, true, 1.0f, R.string.btn_pause);
+                setButton(btnReset, false, 0.4f, R.string.btn_reset);
+                setButton(btnLap, true, 1.0f, R.string.btn_lap);
                 break;
 
             case PAUSED:
                 tvStateBadge.setText("PAUSED");
                 tvStateBadge.setTextColor(getColor(R.color.stopwatch_pause));
-
-                btnStart.setEnabled(true);
-                btnStart.setAlpha(1.0f);
-                btnStart.setText(R.string.btn_resume);
-
-                btnPause.setEnabled(false);
-                btnPause.setAlpha(0.4f);
-
-                btnReset.setEnabled(true);
-                btnReset.setAlpha(1.0f);
-
-                btnLap.setEnabled(false);
-                btnLap.setAlpha(0.4f);
+                setButton(btnStart, true, 1.0f, R.string.btn_resume);
+                setButton(btnPause, false, 0.4f, R.string.btn_pause);
+                setButton(btnReset, true, 1.0f, R.string.btn_reset);
+                setButton(btnLap, false, 0.4f, R.string.btn_lap);
                 break;
 
             case STOPPED:
             default:
                 tvStateBadge.setText("READY");
                 tvStateBadge.setTextColor(getColor(R.color.primary));
-
-                btnStart.setEnabled(true);
-                btnStart.setAlpha(1.0f);
-                btnStart.setText(R.string.btn_start);
-
-                btnPause.setEnabled(false);
-                btnPause.setAlpha(0.4f);
-
-                btnReset.setEnabled(false);
-                btnReset.setAlpha(0.4f);
-
-                btnLap.setEnabled(false);
-                btnLap.setAlpha(0.4f);
+                setButton(btnStart, true, 1.0f, R.string.btn_start);
+                setButton(btnPause, false, 0.4f, R.string.btn_pause);
+                setButton(btnReset, false, 0.4f, R.string.btn_reset);
+                setButton(btnLap, false, 0.4f, R.string.btn_lap);
                 break;
         }
 
         updateLapUi();
+    }
+
+    private void setButton(MaterialButton button, boolean enabled, float alpha, int textRes) {
+        if (button != null) {
+            button.setEnabled(enabled);
+            button.setAlpha(alpha);
+            button.setText(textRes);
+        }
     }
 
     private void updateLapUi() {
@@ -242,24 +206,19 @@ public class StopwatchActivity extends AppCompatActivity {
         lvLaps.setVisibility(count == 0 ? View.GONE : View.VISIBLE);
     }
 
-    // =========================================================================
-    // LIFECYCLE & ORIENTATION PERSISTENCE
-    // =========================================================================
-
     @Override
     protected void onResume() {
         super.onResume();
         if (engine.isRunning()) {
-            handler.removeCallbacks(updateTimerRunnable);
-            handler.post(updateTimerRunnable);
+            handler.removeCallbacks(tickerRunnable);
+            handler.post(tickerRunnable);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Remove callbacks to save CPU when activity is in background
-        handler.removeCallbacks(updateTimerRunnable);
+        handler.removeCallbacks(tickerRunnable);
     }
 
     @Override
@@ -270,7 +229,7 @@ public class StopwatchActivity extends AppCompatActivity {
         outState.putLong(KEY_START_TIME, engine.getStartTimeMillis());
     }
 
-    private void restoreInstanceState(Bundle savedInstanceState) {
+    private void restoreState(Bundle savedInstanceState) {
         String stateStr = savedInstanceState.getString(KEY_STATE, StopwatchEngine.State.STOPPED.name());
         long accumulated = savedInstanceState.getLong(KEY_ACCUMULATED, 0L);
         long startTime = savedInstanceState.getLong(KEY_START_TIME, 0L);
@@ -285,7 +244,7 @@ public class StopwatchActivity extends AppCompatActivity {
 
         updateUiState();
         if (engine.isRunning()) {
-            handler.post(updateTimerRunnable);
+            handler.post(tickerRunnable);
         }
     }
 }

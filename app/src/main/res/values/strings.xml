@@ -40,4 +40,25 @@
     <string name="btn_lap">Lap</string>
     <string name="lap_history_title">Lap History</string>
     <string name="no_laps_recorded">No laps recorded yet. Tap "Lap" while running.</string>
+
+    <!-- Quiz Application Strings -->
+    <string name="quiz_app_name">Quiz Master</string>
+    <string name="quiz_tagline">Oasis Infobyte · Task 4</string>
+    <string name="quiz_welcome_title">Computer Science &amp; Tech Quiz</string>
+    <string name="quiz_welcome_subtitle">Test your knowledge across programming, hardware, data structures, and computing fundamentals!</string>
+    <string name="quiz_feature_1">• 10 randomized multiple-choice questions</string>
+    <string name="quiz_feature_2">• Instant answer validation (Green / Red feedback)</string>
+    <string name="quiz_feature_3">• Detailed explanations for every question</string>
+    <string name="quiz_btn_start">Start Quiz</string>
+    <string name="quiz_btn_next">Next Question</string>
+    <string name="quiz_btn_finish">View Results</string>
+    <string name="quiz_btn_restart">Restart Quiz</string>
+    <string name="quiz_btn_home">Back to Menu</string>
+    <string name="quiz_high_score_label">Personal Best:</string>
+    <string name="quiz_score_prefix">Score: </string>
+    <string name="quiz_question_counter">Question %1$d of %2$d</string>
+    <string name="quiz_result_title">Quiz Completed!</string>
+    <string name="quiz_correct_label">Correct</string>
+    <string name="quiz_wrong_label">Incorrect</string>
+    <string name="quiz_score_label">Accuracy</string>
 </resources>

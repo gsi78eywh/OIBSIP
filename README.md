@@ -105,6 +105,32 @@ OIBSIP/
 
 ---
 
+## 🧠 TASK 4 · Quiz Application
+
+### 🎯 Objective
+Build an interactive, multiple-choice quiz application on Computer Science & Technology fundamentals. Users answer questions one at a time with instant visual feedback and review their final score and performance metrics upon completion.
+
+### ✨ Feature Checklist
+- [x] **Welcome Screen with Start Button**: Landing screen (`QuizWelcomeActivity`) with topic overview, rules card, persistent high-score tracking, and Start button.
+- [x] **Question Screen**: Shows question text, category & difficulty chip, question counter (e.g., *"Question 3 of 10"*), live score badge, and animated linear progress bar (`QuizActivity`).
+- [x] **4 Answer Options**: Styled interactive cards with letter prefixes (A, B, C, D) and smooth state transitions.
+- [x] **15 Curated Questions**: Pre-loaded question bank spanning Computer Science, Data Structures, Architecture, Networking, and Programming Fundamentals.
+- [x] **Randomized Shuffling**: 10 questions randomly sampled per round, and answer options dynamically scrambled while maintaining correct answer tracking.
+- [x] **Immediate Answer Feedback**:
+  - Correct answer selected: highlights **Green (`#10B981`)** with a checkmark.
+  - Wrong answer selected: highlights **Red (`#EF4444`)** with a cross, while revealing the **correct answer in Green** so the user learns.
+  - Explanation card slides in with contextual rationale.
+  - Options locked to prevent multiple answers per question.
+- [x] **Next Button**: Advances to the following question (switches to *"View Results"* on final question).
+- [x] **Score Tracking Throughout Quiz**: Live score badge updates dynamically.
+- [x] **Results Screen**: Detailed breakdown (`QuizResultActivity`) displaying total score, accuracy percentage, correct count, incorrect count, qualitative feedback grade, and personal best celebration.
+- [x] **Restart Quiz**: 1-tap restart button that re-samples and scrambles a new quiz session immediately.
+- [x] **Desktop Windows App**: Runnable directly via `.\run_quiz.bat`.
+- [x] **Web Simulator**: Runnable in any browser via `web/quiz.html`.
+- [x] **JUnit 4 Automated Tests**: Complete test coverage via `QuizEngineTest.java`.
+
+---
+
 ## ⏱️ TASK 5 · Stopwatch Application
 
 ### 🎯 Objective
@@ -120,4 +146,5 @@ Build a functional, high-precision stopwatch app with start, stop/pause, reset, 
 - [x] **(Bonus) Lap Recording**: Records individual lap split duration and cumulative elapsed time in a scrollable list.
 - [x] **Desktop Windows App**: Runnable via `.\run_stopwatch.bat`.
 - [x] **Web Simulator**: Runnable in browser via `web/stopwatch.html`.
+
 
