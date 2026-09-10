@@ -7,12 +7,12 @@
 
 ## 🎙️ 1. The 30-Second Elevator Pitch
 
-> *"In this project, I built three complete, production-ready applications for the Oasis Infobyte internship: **Task 1 (Unit Converter)**, **Task 4 (Quiz Application)**, and **Task 5 (Stopwatch & Lap Timer)**.*
+> *"In this project, I built four complete, production-ready applications for the Oasis Infobyte internship: **Task 1 (Unit Converter)**, **Task 2 (To-Do App with Login & SQLite)**, **Task 4 (Quiz Application)**, and **Task 5 (Stopwatch & Lap Timer)**.*
 > 
-> *The key architectural highlight of the entire codebase is **Decoupled Engine Architecture**: all mathematical formulas, game logic, and timing calculations are written in **pure Java**, completely separated from the Android UI.*
+> *The key architectural highlight of the entire codebase is **Decoupled Engine Architecture**: all mathematical formulas, authentication hashing, game logic, and timing calculations are written in **pure Java**, completely separated from the Android UI.*
 > 
 > *This means:*
-> 1. *Every feature is covered by **automated JUnit 4 unit tests** (44 tests with 100% pass rate).*
+> 1. *Every feature is covered by **automated JUnit 4 unit tests** (58 tests with 100% pass rate).*
 > 2. *The applications can be run instantly on **Windows Desktop** with 1-click batch scripts without needing a heavy Android emulator.*
 > 3. *The apps also have full **Web Simulators** running in modern browsers.*
 > 4. *The UI adheres strictly to **Material Design 3**, responsive layouts, and Android lifecycle persistence."*
@@ -24,6 +24,7 @@
 | Task ID | Requested Scope | Delivered Solution | Acceptance Status |
 | :--- | :--- | :--- | :---: |
 | **TASK 1**<br>Unit Converter | Numeric input, 2 dropdowns, convert button, result display, $\ge 3$ categories, validation toasts. | **6 categories, 32 units**, 2-step base math, instant unit swap, formula breakdown, clipboard copy, physical boundary safety. | **100% Accepted** ✅ |
+| **TASK 2**<br>To-Do App with Login | Login/register screens, hashed passwords, user-specific tasks, mark complete (strikethrough), delete, SQLite DB, empty state. | **SQLite relational DB**, SHA-256 password hashing, foreign key user isolation, session manager, filter tabs, desktop & web runners. | **100% Accepted** ✅ |
 | **TASK 4**<br>Quiz Application | Welcome screen, question screen, 4 choices, $\ge 10$ questions, instant feedback (green/red), next button, score tracking, results, restart. | **15 curated questions**, dynamic option scrambling, explanation panel, option locking, persistent high-scores, desktop & web runners. | **100% Accepted** ✅ |
 | **TASK 5**<br>Stopwatch App | Start, pause, reset, large display, dynamic visual states, state persistence, bonus lap timer. | **Millisecond accuracy (`MM:SS.cs`)**, wall-clock delta engine, lap split interval list, lifecycle & rotation persistence, desktop & web runners. | **100% Accepted** ✅ |
 
@@ -39,9 +40,9 @@ Open file: [`UnitConverter.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/
 
 1. **The 2-Step Base Unit Formula (Linear Units)**:
    Instead of writing hundreds of conversion formulas for every pair of units, every unit in a category defines its conversion ratio relative to a single **"Base Unit"** (e.g., meter for Length, kilogram for Weight):
-   - **Step 1:** Convert from the source unit to the base unit:
+   - **Step 1:** Convert from source unit to base unit:
      $$\text{Base Value} = \text{Input} \times \text{fromUnit.factorToBase}$$
-   - **Step 2:** Convert from the base unit to the target unit:
+   - **Step 2:** Convert from base unit to target unit:
      $$\text{Result Value} = \frac{\text{Base Value}}{\text{toUnit.factorToBase}}$$
    *Example:* 5 Feet to Centimeters:
    $5 \times 0.3048 = 1.524\text{ m} \longrightarrow \frac{1.524}{0.01} = \mathbf{152.4\text{ cm}}$.
@@ -56,7 +57,7 @@ Open file: [`UnitConverter.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/
    In [`MainActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/unitconverter/MainActivity.java):
    - **Empty check**: Prevents converting blank input.
    - **Number format check**: Catches invalid characters via `try-catch (NumberFormatException)`.
-   - **Absolute Zero boundary**: Alerts if user enters a physically impossible temperature (below $0\text{ K}$, $-273.15^\circ\text{C}$, or $-459.67^\circ\text{F}$).
+   - **Absolute Zero boundary**: Alerts if user enters a temperature below $0\text{ K}$, $-273.15^\circ\text{C}$, or $-459.67^\circ\text{F}$.
 
 ### 🎯 3 Points to Highlight to the Client:
 1. **Instant Unit Swap**: Tap the swap button to invert units and recalculate instantly.
@@ -65,7 +66,35 @@ Open file: [`UnitConverter.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/
 
 ---
 
-## 🧠 3. TASK 4: Quiz Application (How to Explain)
+## 📝 3. TASK 2: To-Do App with Login (How to Explain)
+
+### 💡 The Problem & Solution
+Users need a private, secure task list where their data persists across sessions and is isolated from any other user who logs in on the same device.
+
+### ⚙️ How the Code Works (Plain English)
+Open files: [`TodoDbHelper.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/todo/db/TodoDbHelper.java) and [`PasswordHasher.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/todo/security/PasswordHasher.java)
+
+1. **SHA-256 Password Security**:
+   - Plaintext passwords are never saved.
+   - [`PasswordHasher.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/todo/security/PasswordHasher.java) computes a 64-character SHA-256 cryptographic hash before SQLite insertion.
+   - Even if someone opens the raw database file, user passwords are completely unreadable and protected.
+
+2. **User-Specific Task Isolation**:
+   - The `tasks` table stores `user_id` as a foreign key referencing `users.id`.
+   - All queries filter by `WHERE user_id = ?`. When Alice logs in, she only sees Alice's tasks. When Bob logs in, he only sees Bob's tasks.
+
+3. **Task Completion Strikethrough & Permanent Deletion**:
+   - Tapping the checkbox updates `is_completed` in SQLite and dynamically adds `Paint.STRIKE_THRU_TEXT_FLAG` to the title.
+   - Tapping the delete button prompts a confirmation dialog, then permanently removes the record from SQLite.
+
+### 🎯 3 Points to Highlight to the Client:
+1. **Zero Data Leaks**: Strict foreign key scoping ensures multi-user confidentiality.
+2. **Persistent Sessions**: Logged-in users stay logged in until they tap "Log Out".
+3. **Task Status Summary**: Header displays live "X Pending • Y Completed" counters.
+
+---
+
+## 🧠 4. TASK 4: Quiz Application (How to Explain)
 
 ### 💡 The Problem & Solution
 A multiple-choice quiz app to test Computer Science & Technology fundamentals with randomized questions, immediate feedback so users learn as they play, and high score tracking.
@@ -95,7 +124,7 @@ Open files: [`QuizEngine.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/sr
 
 ---
 
-## ⏱️ 4. TASK 5: Stopwatch & Lap Timer (How to Explain)
+## ⏱️ 5. TASK 5: Stopwatch & Lap Timer (How to Explain)
 
 ### 💡 The Problem & Solution
 Many beginners build stopwatches by running a naive `count++` loop. That approach is flawed because it drifts and lags whenever the operating system gets busy. This app uses real-time **system clock differential calculation**.
@@ -121,51 +150,48 @@ Open files: [`StopwatchEngine.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/a
 
 ### 🎯 3 Points to Highlight to the Client:
 1. **Millisecond Accuracy**: Digital display in `MM:SS.cs` (and `HH:MM:SS.cs` for 1+ hours).
-2. **Dynamic Button States**: Buttons enable/disable and change opacity depending on state (Start disabled while running, Reset disabled until paused).
+2. **Dynamic Button States**: Buttons enable/disable and change opacity depending on state.
 3. **No Drift**: Because time is calculated from the hardware clock, phone lag never slows down the timer.
 
 ---
 
-## ❓ 5. Top 5 Questions a Client Will Ask (With Ready Answers)
+## ❓ 6. Top Questions a Client Will Ask (With Ready Answers)
 
 ### Q1: *"Why did you separate the Engine classes from the Activity classes?"*
-> **Answer:** *"Separation of Concerns. Keeping the math and business logic in pure Java (no Android UI dependencies) allows us to run unit tests in milliseconds without launching an emulator. It also allowed us to reuse the exact same engine to build a Windows Desktop GUI and interactive web simulators."*
+> **Answer:** *"Separation of Concerns. Keeping business logic in pure Java (no Android UI dependencies) allows us to run 58 automated unit tests in milliseconds without launching an emulator. It also allowed us to reuse the exact same engines to build Windows Desktop GUIs and interactive web simulators."*
 
-### Q2: *"How do you test that the code works correctly?"*
-> **Answer:** *"We have a 1-click test script (`run_tests.bat`) that compiles and executes 44 automated JUnit 4 test cases covering state transitions, mathematical edge cases, boundary checks, and lap calculations. All 44 tests pass with 100% success."*
+### Q2: *"How are passwords protected in Task 2?"*
+> **Answer:** *"Passwords are hashed using SHA-256 via standard Java MessageDigest. We store a 64-character hexadecimal hash in SQLite instead of plaintext. The original password can never be recovered from the database."*
 
 ### Q3: *"What happens if the user rotates their phone?"*
-> **Answer:** *"In Android, screen rotation destroys and recreates the Activity. Both the Stopwatch and Quiz apps implement `onSaveInstanceState` and `onRestoreInstanceState` to save the active state, so no time or quiz progress is ever lost."*
+> **Answer:** *"All apps implement state preservation using `onSaveInstanceState` and `onRestoreInstanceState` (or SharedPreferences/SQLite). Screen rotation never loses timing, active inputs, or user session data."*
 
 ### Q4: *"Can someone run this without having Android Studio or an Android phone?"*
-> **Answer:** *"Yes! We built native Windows desktop applications for each task (`run_stopwatch.bat`, `run_quiz.bat`, `run_converter.bat`) and hosted web versions in the `web/` folder that can be opened in any browser."*
-
-### Q5: *"How is user input protected against crashes?"*
-> **Answer:** *"We use defensive programming: empty string validation, try-catch blocks for numeric parsing, boundary condition checks (such as Absolute Zero), and UI locking to prevent duplicate button clicks."*
+> **Answer:** *"Yes! Every task includes a 1-click Windows desktop runner (`run_converter.bat`, `run_todo.bat`, `run_quiz.bat`, `run_stopwatch.bat`) and hosted web versions in the `web/` folder that can be opened in any browser."*
 
 ---
 
-## 🚀 6. Quick Demo Flow (Recommended 3-Minute Demo)
+## 🚀 7. Quick Demo Flow (Recommended 4-Minute Demo)
 
 1. **Show Task 1 (Converter)**:
-   - Run `.\run_converter.bat` or open `web/index.html`.
+   - Run `.\run_app.bat` or open `web/index.html`.
    - Convert `100 °C` to `°F` (shows `212 °F`).
-   - Click "Swap Units".
-   - Type `-300` and show the Absolute Zero error toast.
+   - Click "Swap Units" and show the Absolute Zero boundary check.
 
-2. **Show Task 5 (Stopwatch)**:
+2. **Show Task 2 (To-Do App with Login)**:
+   - Run `.\run_todo.bat` or open `web/todo.html`.
+   - Log in with `demo@example.com` / `password123`.
+   - Add a new task, toggle the completion checkbox (point out strikethrough), and test the "Pending" / "Completed" filter chips.
+   - Click **Log Out**.
+
+3. **Show Task 5 (Stopwatch)**:
    - Run `.\run_stopwatch.bat` or open `web/stopwatch.html`.
-   - Click **Start**, let it run for 3 seconds.
-   - Click **Lap** twice (highlight lap split calculations).
-   - Click **Pause**, then **Resume**, then **Reset**.
+   - Click **Start**, let it run, record 2 laps (highlight lap split calculations), then pause and reset.
 
-3. **Show Task 4 (Quiz)**:
+4. **Show Task 4 (Quiz)**:
    - Run `.\run_quiz.bat` or open `web/quiz.html`.
-   - Click **Start Quiz**.
-   - Answer Question 1 correctly (point out the **Green** card and explanation).
-   - Answer Question 2 incorrectly (point out the **Red** card and the **Green** correct answer reveal).
-   - Complete the quiz and highlight the **Results Card** and **Personal Best** score tracking.
+   - Click **Start Quiz**, answer a question to show the **Green** feedback, answer another to show the **Red** feedback and correct answer reveal.
 
-4. **Show Test Suite**:
+5. **Show Test Suite**:
    - Run `.\run_tests.bat`.
-   - Show all **44 JUnit 4 tests** and **155 verification checks** passing cleanly.
+   - Show all **58 JUnit 4 tests** and **155 verification checks** passing cleanly.

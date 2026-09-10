@@ -13,7 +13,7 @@ set "JUNIT_JAR=C:\Users\SethAndreyJabagat\.gradle\wrapper\dists\gradle-8.5-bin\5
 set "HAMCREST_JAR=C:\Users\SethAndreyJabagat\.gradle\wrapper\dists\gradle-8.5-bin\5t9huq95ubn472n8rpzujfbqh\gradle-8.5\lib\hamcrest-core-1.3.jar"
 
 echo =========================================================
-echo    OIBSIP Unit Converter - Automated Test Runner
+echo    OIBSIP Automated Test Runner (Tasks 1, 2, 4, 5)
 echo =========================================================
 echo Using Java: %JAVA_EXE%
 echo.
@@ -21,7 +21,7 @@ echo.
 if not exist "target_cli_classes" mkdir "target_cli_classes"
 
 echo [1/3] Compiling source and test files...
-"%JAVAC_EXE%" -cp "%JUNIT_JAR%;%HAMCREST_JAR%" -d "target_cli_classes" app/src/main/java/com/oibsip/unitconverter/model/*.java app/src/main/java/com/oibsip/unitconverter/converter/*.java app/src/test/java/com/oibsip/unitconverter/model/*.java app/src/test/java/com/oibsip/unitconverter/*.java app/src/main/java/com/oibsip/stopwatch/model/*.java app/src/main/java/com/oibsip/stopwatch/engine/*.java app/src/test/java/com/oibsip/stopwatch/*.java app/src/main/java/com/oibsip/quiz/model/*.java app/src/main/java/com/oibsip/quiz/data/*.java app/src/main/java/com/oibsip/quiz/engine/*.java app/src/test/java/com/oibsip/quiz/*.java
+"%JAVAC_EXE%" -cp "%JUNIT_JAR%;%HAMCREST_JAR%" -d "target_cli_classes" app/src/main/java/com/oibsip/unitconverter/model/*.java app/src/main/java/com/oibsip/unitconverter/converter/*.java app/src/test/java/com/oibsip/unitconverter/model/*.java app/src/test/java/com/oibsip/unitconverter/*.java app/src/main/java/com/oibsip/stopwatch/model/*.java app/src/main/java/com/oibsip/stopwatch/engine/*.java app/src/test/java/com/oibsip/stopwatch/*.java app/src/main/java/com/oibsip/quiz/model/*.java app/src/main/java/com/oibsip/quiz/data/*.java app/src/main/java/com/oibsip/quiz/engine/*.java app/src/test/java/com/oibsip/quiz/*.java app/src/main/java/com/oibsip/todo/model/*.java app/src/main/java/com/oibsip/todo/security/*.java app/src/main/java/com/oibsip/todo/engine/*.java app/src/test/java/com/oibsip/todo/*.java
 
 if errorlevel 1 (
     echo [ERROR] Compilation failed!
@@ -38,8 +38,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/3] Running JUnit 4 Test Suite (Unit Converter + Stopwatch + Quiz App)...
-"%JAVA_EXE%" -cp "target_cli_classes;%JUNIT_JAR%;%HAMCREST_JAR%" org.junit.runner.JUnitCore com.oibsip.unitconverter.model.CategoryTest com.oibsip.unitconverter.model.UnitTest com.oibsip.unitconverter.UnitConverterTest com.oibsip.unitconverter.InteractiveConsoleRunnerTest com.oibsip.stopwatch.StopwatchEngineTest com.oibsip.quiz.QuizEngineTest
+echo [3/3] Running JUnit 4 Test Suite (Unit Converter + Stopwatch + Quiz + To-Do App)...
+"%JAVA_EXE%" -cp "target_cli_classes;%JUNIT_JAR%;%HAMCREST_JAR%" org.junit.runner.JUnitCore com.oibsip.unitconverter.model.CategoryTest com.oibsip.unitconverter.model.UnitTest com.oibsip.unitconverter.UnitConverterTest com.oibsip.unitconverter.InteractiveConsoleRunnerTest com.oibsip.stopwatch.StopwatchEngineTest com.oibsip.quiz.QuizEngineTest com.oibsip.todo.TodoEngineTest
 
 if errorlevel 1 (
     echo [FAIL] JUnit tests failed.

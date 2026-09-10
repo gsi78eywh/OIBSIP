@@ -61,4 +61,18 @@
     <string name="quiz_correct_label">Correct</string>
     <string name="quiz_wrong_label">Incorrect</string>
     <string name="quiz_score_label">Accuracy</string>
+
+    <!-- Task 2 To-Do App Strings -->
+    <string name="todo_app_name">To-Do List</string>
+    <string name="todo_tagline">Oasis Infobyte · Task 2</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="login_subtitle">Sign in to access your personal to-do list</string>
+    <string name="register_title">Create Account</string>
+    <string name="register_subtitle">Register to start organizing your daily tasks</string>
+    <string name="btn_login">Sign In</string>
+    <string name="btn_register">Sign Up</string>
+    <string name="btn_logout">Log Out</string>
+    <string name="btn_add_task">Add Task</string>
+    <string name="empty_todo_title">No Tasks Found</string>
+    <string name="empty_todo_message">You\'re all caught up! Tap the + button to create a new task.</string>
 </resources>

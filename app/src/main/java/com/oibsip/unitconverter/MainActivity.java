@@ -3,6 +3,7 @@ package com.oibsip.unitconverter;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -146,18 +147,27 @@ public class MainActivity extends AppCompatActivity {
         btnReset.setOnClickListener(v -> resetForm());
         btnCopyResult.setOnClickListener(v -> copyResultToClipboard());
 
-        View btnOpenQuiz = findViewById(R.id.btnOpenQuiz);
-        if (btnOpenQuiz != null) {
-            btnOpenQuiz.setOnClickListener(v -> {
+        View btnNavTask2 = findViewById(R.id.btnNavTask2);
+        if (btnNavTask2 != null) {
+            btnNavTask2.setOnClickListener(v -> {
+                Log.d(TAG, "Opening Task 2 To-Do App");
+                Intent intent = new Intent(this, com.oibsip.todo.LoginActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        View btnNavTask4 = findViewById(R.id.btnNavTask4);
+        if (btnNavTask4 != null) {
+            btnNavTask4.setOnClickListener(v -> {
                 Log.d(TAG, "Opening Task 4 Quiz App");
                 Intent intent = new Intent(this, com.oibsip.quiz.QuizWelcomeActivity.class);
                 startActivity(intent);
             });
         }
 
-        View btnOpenStopwatch = findViewById(R.id.btnOpenStopwatch);
-        if (btnOpenStopwatch != null) {
-            btnOpenStopwatch.setOnClickListener(v -> {
+        View btnNavTask5 = findViewById(R.id.btnNavTask5);
+        if (btnNavTask5 != null) {
+            btnNavTask5.setOnClickListener(v -> {
                 Log.d(TAG, "Opening Task 5 Stopwatch App");
                 Intent intent = new Intent(this, com.oibsip.stopwatch.StopwatchActivity.class);
                 startActivity(intent);

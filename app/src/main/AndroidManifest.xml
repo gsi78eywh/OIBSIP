@@ -46,6 +46,25 @@
             android:exported="false"
             android:label="@string/quiz_app_name"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Task 2 To-Do App Activities -->
+        <activity
+            android:name="com.oibsip.todo.LoginActivity"
+            android:exported="true"
+            android:label="@string/todo_app_name"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="com.oibsip.todo.RegisterActivity"
+            android:exported="false"
+            android:label="@string/register_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name="com.oibsip.todo.TodoListActivity"
+            android:exported="false"
+            android:label="@string/todo_app_name"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

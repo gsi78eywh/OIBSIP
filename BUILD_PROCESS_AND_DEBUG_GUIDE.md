@@ -125,6 +125,7 @@ The user interface is built inside a smooth scrolling container ([`ScrollView`](
 ### Debug Technique 1: Using Logcat Logs (Recommended)
 Every user action prints descriptive, formatted debug logs with dedicated tags:
 - **Task 1 (Unit Converter):** `tag:UnitConverterApp`
+- **Task 2 (To-Do App with Login):** `tag:TodoApp`
 - **Task 4 (Quiz Application):** `tag:QuizApp`
 - **Task 5 (Stopwatch Application):** `tag:StopwatchApp`
 
@@ -133,6 +134,7 @@ Every user action prints descriptive, formatted debug logs with dedicated tags:
 2. Click the **Logcat** tab at the bottom of Android Studio (or press `Alt + 6`).
 3. In the search/filter bar, filter by tag or package:
    - For Unit Converter: `tag:UnitConverterApp`
+   - For To-Do App: `tag:TodoApp`
    - For Quiz: `tag:QuizApp`
    - For Stopwatch: `tag:StopwatchApp`
    - For all tasks: `package:com.oibsip`
@@ -140,6 +142,9 @@ Every user action prints descriptive, formatted debug logs with dedicated tags:
    - **Unit Converter:**
      `D/UnitConverterApp: Converting: 100.0 Centimeter -> Meter`
      `D/UnitConverterApp: Conversion successful: 1 m`
+   - **To-Do App:**
+     `D/TodoApp: User login success: alex@example.com (User ID: 1)`
+     `D/TodoApp: Inserted new task: 'Complete Task 2' (Task ID: 4)`
    - **Quiz App:**
      `D/QuizApp: User answered question 3: Selected index 1 (Correct)`
      `D/QuizApp: Score updated: 3 / 3`
