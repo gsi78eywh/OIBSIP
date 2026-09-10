@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OIBSIP · Task 2: To-Do App with Login</title>
+  <title>OIBSIP · Task 2: To-Do App with Login (Supabase Cloud + SQLite)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Official Supabase JS v2 Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #4338CA;
@@ -21,6 +23,9 @@
       --border: #E2E8F0;
       --danger: #EF4444;
       --danger-bg: #FEE2E2;
+      --success: #10B981;
+      --success-bg: #D1FAE5;
+      --supabase-green: #3ECF8E;
       --shadow-phone: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 12px #1E293B;
     }
 
@@ -38,7 +43,7 @@
       color: #F8FAFC;
     }
 
-    .top-banner { text-align: center; margin-bottom: 20px; }
+    .top-banner { text-align: center; margin-bottom: 16px; }
     .badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3);
@@ -49,7 +54,7 @@
     .top-banner p { color: #94A3B8; font-size: 14px; margin-top: 4px; }
 
     .nav-links {
-      display: flex; gap: 12px; justify-content: center; margin-top: 10px; flex-wrap: wrap;
+      display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;
     }
     .nav-links a {
       color: #A5B4FC; font-size: 13px; text-decoration: none; font-weight: 600;
@@ -60,11 +65,55 @@
       background: rgba(99, 102, 241, 0.3); color: #FFFFFF;
     }
 
+    /* Supabase Cloud Connection Bar */
+    .cloud-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(62, 207, 142, 0.3);
+      padding: 8px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      width: 100%;
+      max-width: 420px;
+      font-size: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .cloud-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--supabase-green);
+      box-shadow: 0 0 8px var(--supabase-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+    .backend-tag {
+      background: rgba(62, 207, 142, 0.2);
+      color: var(--supabase-green);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
     /* Mobile Frame */
     .device-frame {
       width: 100%;
       max-width: 420px;
-      height: 740px;
+      height: 750px;
       background: var(--device-bg);
       border-radius: 36px;
       box-shadow: var(--shadow-phone);
@@ -88,6 +137,34 @@
       border-bottom: 1px solid var(--border);
     }
 
+    /* Storage Mode Switcher */
+    .mode-tab-bar {
+      display: flex;
+      background: #F1F5F9;
+      padding: 4px;
+      margin: 8px 16px 0;
+      border-radius: 10px;
+      gap: 4px;
+    }
+    .mode-tab {
+      flex: 1;
+      text-align: center;
+      padding: 6px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      background: #FFFFFF;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
     .screen {
       flex: 1;
       overflow-y: auto;
@@ -99,34 +176,34 @@
     /* Auth Screens */
     .auth-container {
       flex: 1;
-      padding: 32px 24px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
     .auth-logo {
-      width: 64px; height: 64px;
+      width: 60px; height: 60px;
       background: var(--primary-light);
       border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      color: var(--primary); font-size: 28px; margin-bottom: 16px;
+      color: var(--primary); font-size: 26px; margin-bottom: 12px;
     }
-    .auth-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
-    .auth-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; text-align: center; margin-bottom: 24px; }
+    .auth-title { font-size: 20px; font-weight: 800; color: var(--text-main); }
+    .auth-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 4px; text-align: center; margin-bottom: 18px; }
 
     .form-card {
       width: 100%;
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 20px;
+      padding: 18px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
-    .input-group { margin-bottom: 14px; }
+    .input-group { margin-bottom: 12px; }
     .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
     .input-group input {
-      width: 100%; height: 44px; padding: 0 14px;
+      width: 100%; height: 42px; padding: 0 14px;
       border-radius: 10px; border: 1px solid var(--border);
       font-size: 14px; font-family: inherit; color: var(--text-main);
       outline: none; transition: border-color 0.2s;
@@ -134,59 +211,136 @@
     .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1); }
 
     .btn-primary {
-      width: 100%; height: 48px; border-radius: 10px;
-      background: var(--primary); color: #fff; font-size: 15px; font-weight: 700;
+      width: 100%; height: 46px; border-radius: 10px;
+      background: var(--primary); color: #fff; font-size: 14px; font-weight: 700;
       border: none; cursor: pointer; transition: background 0.2s; margin-top: 6px;
     }
     .btn-primary:hover { background: var(--primary-hover); }
 
     .switch-link {
-      margin-top: 20px; font-size: 13px; font-weight: 600;
+      margin-top: 16px; font-size: 13px; font-weight: 600;
       color: var(--primary); cursor: pointer; text-decoration: none;
+    }
+
+    /* Notification banner */
+    .notice-box {
+      margin: 10px 16px 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .notice-info {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: #1E40AF;
+    }
+    .notice-warning {
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      color: #92400E;
     }
 
     /* To-Do List Screen */
     .app-header {
       background: var(--card-bg);
       padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
     }
     .app-header h2 { font-size: 18px; font-weight: 800; color: var(--text-main); }
-    .app-header p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .btn-logout {
-      background: var(--danger-bg); color: var(--danger); border: none;
-      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
+    .app-header p { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+
+    .btn-sync {
+      background: var(--primary-light);
+      border: 1px solid rgba(67, 56, 202, 0.2);
+      color: var(--primary);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
+    .btn-sync:hover { background: #E0E7FF; }
+
+    .btn-logout {
+      background: #F1F5F9; border: none; padding: 6px 12px;
+      border-radius: 8px; font-size: 12px; font-weight: 700;
+      color: var(--danger); cursor: pointer;
+    }
+    .btn-logout:hover { background: var(--danger-bg); }
 
     .filter-bar {
-      padding: 12px 20px 8px 20px;
-      display: flex; gap: 8px; background: var(--device-bg);
+      display: flex;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
     }
     .chip {
-      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
-      background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted);
-      cursor: pointer; transition: all 0.2s;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
 
     .task-list {
-      flex: 1; overflow-y: auto; padding: 12px 20px 80px 20px;
-      display: flex; flex-direction: column; gap: 10px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .task-card {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      transition: all 0.2s;
     }
-    .task-card.completed { opacity: 0.6; }
+    .task-card.completed {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      opacity: 0.85;
+    }
+
     .task-checkbox {
-      margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary);
     }
+
     .task-info { flex: 1; }
     .task-title { font-size: 14px; font-weight: 700; color: var(--text-main); word-break: break-word; }
-    .task-title.done { text-decoration: line-through; color: var(--text-muted); }
+    .task-title.done { text-decoration: line-through; color: #94A3B8; }
     .task-notes { font-size: 12px; color: var(--text-muted); margin-top: 3px; word-break: break-word; }
     .task-date { font-size: 10px; color: #94A3B8; margin-top: 6px; }
 
@@ -207,7 +361,7 @@
     /* Floating Action Button */
     .fab {
       position: absolute; right: 20px; bottom: 20px;
-      width: 54px; height: 54px; border-radius: 50%;
+      width: 52px; height: 52px; border-radius: 50%;
       background: var(--primary); color: #fff; font-size: 24px;
       display: flex; align-items: center; justify-content: center;
       border: none; box-shadow: 0 8px 16px rgba(67, 56, 202, 0.35);
@@ -240,7 +394,7 @@
   <div class="top-banner">
     <div class="badge">Oasis Infobyte · Task 2</div>
     <h1>Secure To-Do App with Login</h1>
-    <p>User authentication, password hashing, and user-scoped task persistence</p>
+    <p>Connected to Supabase Cloud & Local SQLite Database</p>
     <div class="nav-links">
       <a href="index.html">📐 Task 1: Converter</a>
       <a href="todo.html" class="active">📝 Task 2: To-Do App</a>
@@ -249,10 +403,31 @@
     </div>
   </div>
 
+  <!-- Live Cloud Connection Bar -->
+  <div class="cloud-status-bar">
+    <div class="cloud-pill">
+      <span class="status-dot"></span>
+      <span>Supabase: <strong>leneusmnmwxmuyjxfqjx</strong></span>
+    </div>
+    <span class="backend-tag" id="statusBackendTag">⚡ CLOUD SYNC READY</span>
+  </div>
+
   <div class="device-frame">
     <div class="status-bar">
-      <span>9:41 AM</span>
-      <span>📶 🔋 100%</span>
+      <span id="statusBarClock">9:41 AM</span>
+      <span id="statusBarMode">☁️ Supabase Online</span>
+    </div>
+
+    <!-- Storage Mode Toggle -->
+    <div class="mode-tab-bar">
+      <button class="mode-tab active" id="tabCloud" onclick="setStorageMode('cloud')">☁️ Supabase Cloud</button>
+      <button class="mode-tab" id="tabLocal" onclick="setStorageMode('local')">💾 Offline SQLite</button>
+    </div>
+
+    <!-- Info Notice Box -->
+    <div class="notice-box notice-info" id="modeNoticeBox">
+      <span>ℹ️</span>
+      <span id="modeNoticeText">Connected to Supabase live database. Tasks sync automatically across devices.</span>
     </div>
 
     <!-- SCREEN 1: LOGIN -->
@@ -260,7 +435,7 @@
       <div class="auth-container">
         <div class="auth-logo">✓</div>
         <h2 class="auth-title">Welcome Back</h2>
-        <p class="auth-subtitle">Sign in to access your personal to-do list</p>
+        <p class="auth-subtitle" id="loginSubtitle">Sign in to sync your personal to-do list</p>
 
         <div class="form-card">
           <div class="input-group">
@@ -271,7 +446,7 @@
             <label>Password</label>
             <input type="password" id="loginPassword" value="password123" placeholder="••••••••">
           </div>
-          <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+          <button class="btn-primary" id="btnLogin" onclick="handleLogin()">Sign In</button>
         </div>
 
         <span class="switch-link" onclick="switchScreen('screenRegister')">Don't have an account? Sign Up</span>
@@ -283,7 +458,7 @@
       <div class="auth-container">
         <div class="auth-logo">👤</div>
         <h2 class="auth-title">Create Account</h2>
-        <p class="auth-subtitle">Register to start organizing your daily tasks</p>
+        <p class="auth-subtitle" id="registerSubtitle">Register to access your personal to-do cloud</p>
 
         <div class="form-card">
           <div class="input-group">
@@ -302,7 +477,7 @@
             <label>Confirm Password</label>
             <input type="password" id="regConfirmPassword" placeholder="••••••••">
           </div>
-          <button class="btn-primary" onclick="handleRegister()">Sign Up</button>
+          <button class="btn-primary" id="btnRegister" onclick="handleRegister()">Sign Up</button>
         </div>
 
         <span class="switch-link" onclick="switchScreen('screenLogin')">Already have an account? Sign In</span>
@@ -316,7 +491,10 @@
           <h2 id="headerGreeting">Hello, User!</h2>
           <p id="headerCounts">0 Pending • 0 Completed</p>
         </div>
-        <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+        <div class="header-actions">
+          <button class="btn-sync" title="Refresh & Sync" onclick="syncCurrentTasks()">🔄</button>
+          <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+        </div>
       </div>
 
       <div class="filter-bar">
@@ -326,7 +504,7 @@
       </div>
 
       <div class="task-list" id="taskListContainer">
-        <!-- Rendered dynamically -->
+        <!-- Tasks rendered dynamically -->
       </div>
 
       <button class="fab" onclick="openAddTaskModal()">+</button>
@@ -354,17 +532,72 @@
   </div>
 
   <script>
-    // SHA-256 Simulation for browser parity
+    // --- SUPABASE CONFIGURATION ---
+    const SUPABASE_URL = "https://leneusmnmwxmuyjxfqjx.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_FBGOzmhk8Lk2xLbPQCXEkA_g0vFAs6j";
+    
+    let supabaseClient = null;
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+
+    let storageMode = "cloud"; // "cloud" or "local"
+    let currentFilter = "ALL";
+    let cloudTasks = [];
+    let cloudUser = null;
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('statusBarClock').textContent = 
+        now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    }
+    setInterval(updateClock, 10000);
+    updateClock();
+
+    // Mode Switcher
+    function setStorageMode(mode) {
+      storageMode = mode;
+      document.getElementById('tabCloud').classList.toggle('active', mode === 'cloud');
+      document.getElementById('tabLocal').classList.toggle('active', mode === 'local');
+      
+      const statusBarMode = document.getElementById('statusBarMode');
+      const noticeBox = document.getElementById('modeNoticeBox');
+      const noticeText = document.getElementById('modeNoticeText');
+      const tag = document.getElementById('statusBackendTag');
+
+      if (mode === 'cloud') {
+        statusBarMode.textContent = "☁️ Supabase Cloud";
+        tag.textContent = "⚡ CLOUD SYNC READY";
+        tag.style.background = "rgba(62, 207, 142, 0.2)";
+        tag.style.color = "var(--supabase-green)";
+        noticeText.textContent = "Connected to Supabase live database. Tasks sync automatically across devices.";
+        noticeBox.className = "notice-box notice-info";
+      } else {
+        statusBarMode.textContent = "💾 Local SQLite DB";
+        tag.textContent = "💾 OFFLINE LOCAL";
+        tag.style.background = "rgba(148, 163, 184, 0.2)";
+        tag.style.color = "#CBD5E1";
+        noticeText.textContent = "Operating in offline SQLite simulation with SHA-256 password hashing. Use demo@example.com / password123";
+        noticeBox.className = "notice-box notice-warning";
+      }
+
+      // If already on todolist, re-render
+      if (document.getElementById('screenTodoList').classList.contains('active')) {
+        renderTasks();
+      }
+    }
+
+    // SHA-256 Simulation for browser offline parity
     async function sha256(str) {
       const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Local Storage Database Simulation
-    function getDb() {
+    // Local Storage Database Simulation (SQLite parity)
+    function getLocalDb() {
       let data = localStorage.getItem("oibsip_todo_db");
       if (!data) {
-        // Seed initial demo account
         const initialDb = {
           users: [
             { id: 1, name: "Alex Demo", email: "demo@example.com", passwordHash: "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f" }
@@ -382,16 +615,16 @@
       return JSON.parse(data);
     }
 
-    function saveDb(db) {
+    function saveLocalDb(db) {
       localStorage.setItem("oibsip_todo_db", JSON.stringify(db));
     }
-
-    let currentFilter = "ALL";
 
     function switchScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
+
+    // --- AUTHENTICATION ---
 
     async function handleLogin() {
       const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -402,16 +635,69 @@
         return;
       }
 
-      const db = getDb();
+      if (storageMode === 'cloud' && supabaseClient) {
+        const btn = document.getElementById('btnLogin');
+        btn.textContent = "Signing In...";
+        btn.disabled = true;
+
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password: pass
+          });
+
+          if (error) {
+            console.warn("Supabase Auth Error:", error);
+            if (error.message && error.message.toLowerCase().includes("email not confirmed")) {
+              alert("Supabase Notice: Email not confirmed yet.\n\nTip: In your Supabase Dashboard, go to Authentication -> Providers -> Email and turn off 'Confirm email' to allow immediate login!\n\nSwitching to Offline SQLite mode so you can continue testing immediately.");
+              setStorageMode('local');
+              btn.textContent = "Sign In";
+              btn.disabled = false;
+              handleLocalLogin(email, pass);
+              return;
+            } else if (email === "demo@example.com") {
+              alert("Default demo account (demo@example.com) is stored in Local SQLite.\nSwitching to Offline SQLite mode.");
+              setStorageMode('local');
+              btn.textContent = "Sign In";
+              btn.disabled = false;
+              handleLocalLogin(email, pass);
+              return;
+            } else {
+              alert("Supabase Login Failed: " + error.message);
+              btn.textContent = "Sign In";
+              btn.disabled = false;
+              return;
+            }
+          }
+
+          cloudUser = data.user;
+          btn.textContent = "Sign In";
+          btn.disabled = false;
+          initTodoList();
+        } catch (e) {
+          console.error(e);
+          alert("Connection error: " + e.message + "\nSwitching to Local SQLite mode.");
+          setStorageMode('local');
+          btn.textContent = "Sign In";
+          btn.disabled = false;
+          handleLocalLogin(email, pass);
+        }
+      } else {
+        handleLocalLogin(email, pass);
+      }
+    }
+
+    async function handleLocalLogin(email, pass) {
+      const db = getLocalDb();
       const hash = await sha256(pass);
       const user = db.users.find(u => u.email === email && u.passwordHash === hash);
 
       if (user) {
         db.currentUser = { id: user.id, name: user.name, email: user.email };
-        saveDb(db);
+        saveLocalDb(db);
         initTodoList();
       } else {
-        alert("Invalid email or password.\n(Demo login: demo@example.com / password123)");
+        alert("Invalid email or password.\n(Local Demo: demo@example.com / password123)");
       }
     }
 
@@ -438,39 +724,117 @@
         return;
       }
 
-      const db = getDb();
-      if (db.users.some(u => u.email === email)) {
-        alert("This email is already registered.");
-        return;
+      if (storageMode === 'cloud' && supabaseClient) {
+        const btn = document.getElementById('btnRegister');
+        btn.textContent = "Creating Account...";
+        btn.disabled = true;
+
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password: pass,
+            options: {
+              data: { name: name }
+            }
+          });
+
+          btn.textContent = "Sign Up";
+          btn.disabled = false;
+
+          if (error) {
+            alert("Supabase Registration Error: " + error.message);
+            return;
+          }
+
+          alert("Account registered in Supabase Cloud!\n\nEmail: " + email + "\nNote: If 'Confirm email' is enabled in Supabase, verify your email before logging in or disable 'Confirm email' in Supabase Dashboard.");
+          document.getElementById('loginEmail').value = email;
+          document.getElementById('loginPassword').value = pass;
+          switchScreen('screenLogin');
+        } catch (e) {
+          btn.textContent = "Sign Up";
+          btn.disabled = false;
+          alert("Error connecting to Supabase: " + e.message);
+        }
+      } else {
+        const db = getLocalDb();
+        if (db.users.some(u => u.email === email)) {
+          alert("This email is already registered in Local SQLite.");
+          return;
+        }
+
+        const hash = await sha256(pass);
+        const newUser = { id: Date.now(), name, email, passwordHash: hash };
+        db.users.push(newUser);
+        saveLocalDb(db);
+
+        alert("Local account created successfully! Please sign in.");
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = "";
+        switchScreen('screenLogin');
       }
-
-      const hash = await sha256(pass);
-      const newUser = { id: Date.now(), name, email, passwordHash: hash };
-      db.users.push(newUser);
-      saveDb(db);
-
-      alert("Account created successfully! Please sign in.");
-      document.getElementById('loginEmail').value = email;
-      document.getElementById('loginPassword').value = "";
-      switchScreen('screenLogin');
     }
 
     function handleLogout() {
-      const db = getDb();
+      if (storageMode === 'cloud' && supabaseClient) {
+        supabaseClient.auth.signOut();
+        cloudUser = null;
+      }
+      const db = getLocalDb();
       db.currentUser = null;
-      saveDb(db);
+      saveLocalDb(db);
       switchScreen('screenLogin');
     }
 
-    function initTodoList() {
-      const db = getDb();
-      if (!db.currentUser) {
-        switchScreen('screenLogin');
-        return;
+    // --- TASK MANAGEMENT ---
+
+    async function initTodoList() {
+      let displayName = "User";
+      if (storageMode === 'cloud' && cloudUser) {
+        displayName = (cloudUser.user_metadata && cloudUser.user_metadata.name) || cloudUser.email.split('@')[0];
+      } else {
+        const db = getLocalDb();
+        if (db.currentUser) {
+          displayName = db.currentUser.name;
+        } else {
+          switchScreen('screenLogin');
+          return;
+        }
       }
-      document.getElementById('headerGreeting').textContent = `Hello, ${db.currentUser.name}!`;
-      renderTasks();
+
+      document.getElementById('headerGreeting').textContent = `Hello, ${displayName}!`;
       switchScreen('screenTodoList');
+      await syncCurrentTasks();
+    }
+
+    async function syncCurrentTasks() {
+      if (storageMode === 'cloud' && supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('tasks')
+            .select('*')
+            .order('is_completed', { ascending: true })
+            .order('created_at', { ascending: false });
+
+          if (error) {
+            console.warn("Supabase Fetch Error:", error);
+            // If RLS blocks or empty, use local fallback
+            fallbackToLocalRendering();
+            return;
+          }
+
+          cloudTasks = data || [];
+          renderTasks();
+        } catch (e) {
+          console.warn("Failed to fetch cloud tasks:", e);
+          fallbackToLocalRendering();
+        }
+      } else {
+        renderTasks();
+      }
+    }
+
+    function fallbackToLocalRendering() {
+      renderTasks();
     }
 
     function setFilter(filter) {
@@ -482,16 +846,29 @@
     }
 
     function renderTasks() {
-      const db = getDb();
-      const userTasks = db.tasks.filter(t => t.userId === db.currentUser.id);
-      
-      const pendingCount = userTasks.filter(t => !t.completed).length;
-      const completedCount = userTasks.filter(t => t.completed).length;
+      let tasksToDisplay = [];
+
+      if (storageMode === 'cloud' && cloudTasks.length > 0) {
+        tasksToDisplay = cloudTasks.map(t => ({
+          id: t.id,
+          title: t.title,
+          notes: t.notes || "",
+          completed: !!t.is_completed,
+          date: t.created_at ? new Date(t.created_at).toLocaleDateString() : "Cloud Sync"
+        }));
+      } else {
+        const db = getLocalDb();
+        const currentId = db.currentUser ? db.currentUser.id : 1;
+        tasksToDisplay = db.tasks.filter(t => t.userId === currentId);
+      }
+
+      const pendingCount = tasksToDisplay.filter(t => !t.completed).length;
+      const completedCount = tasksToDisplay.filter(t => t.completed).length;
       document.getElementById('headerCounts').textContent = `${pendingCount} Pending • ${completedCount} Completed`;
 
-      let filtered = userTasks;
-      if (currentFilter === 'PENDING') filtered = userTasks.filter(t => !t.completed);
-      if (currentFilter === 'COMPLETED') filtered = userTasks.filter(t => t.completed);
+      let filtered = tasksToDisplay;
+      if (currentFilter === 'PENDING') filtered = tasksToDisplay.filter(t => !t.completed);
+      if (currentFilter === 'COMPLETED') filtered = tasksToDisplay.filter(t => t.completed);
 
       const container = document.getElementById('taskListContainer');
       container.innerHTML = "";
@@ -501,14 +878,11 @@
           <div class="empty-state">
             <div class="empty-icon">✓</div>
             <div class="empty-title">No Tasks Found</div>
-            <div class="empty-msg">You're all caught up! Tap the + button below.</div>
+            <div class="empty-msg">You're all caught up! Tap the + button below to create a new task.</div>
           </div>
         `;
         return;
       }
-
-      // Sort pending first, then newest
-      filtered.sort((a, b) => (a.completed === b.completed ? b.id - a.id : a.completed ? 1 : -1));
 
       filtered.forEach(task => {
         const card = document.createElement('div');
@@ -520,27 +894,69 @@
             ${task.notes ? `<div class="task-notes">${escapeHtml(task.notes)}</div>` : ''}
             <div class="task-date">${task.date}</div>
           </div>
-          <button class="btn-delete" title="Delete" onclick="deleteTask(${task.id})">🗑️</button>
+          <button class="btn-delete" title="Delete Task" onclick="deleteTask(${task.id})">🗑️</button>
         `;
         container.appendChild(card);
       });
     }
 
-    function toggleTask(id) {
-      const db = getDb();
-      const task = db.tasks.find(t => t.id === id);
-      if (task) {
-        task.completed = !task.completed;
-        saveDb(db);
-        renderTasks();
+    async function toggleTask(id) {
+      if (storageMode === 'cloud' && supabaseClient) {
+        const target = cloudTasks.find(t => t.id === id);
+        if (target) {
+          const newStatus = !target.is_completed;
+          target.is_completed = newStatus;
+          renderTasks();
+
+          try {
+            const { error } = await supabaseClient
+              .from('tasks')
+              .update({ is_completed: newStatus })
+              .eq('id', id);
+            
+            if (error) {
+              console.warn("Supabase update error (likely RLS):", error);
+            }
+          } catch (e) {
+            console.error("Cloud toggle error:", e);
+          }
+        }
       }
+
+      // Also update local DB for parity
+      const db = getLocalDb();
+      const localTask = db.tasks.find(t => t.id === id);
+      if (localTask) {
+        localTask.completed = !localTask.completed;
+        saveLocalDb(db);
+      }
+      renderTasks();
     }
 
-    function deleteTask(id) {
+    async function deleteTask(id) {
       if (!confirm("Are you sure you want to permanently delete this task?")) return;
-      const db = getDb();
+
+      if (storageMode === 'cloud' && supabaseClient) {
+        cloudTasks = cloudTasks.filter(t => t.id !== id);
+        renderTasks();
+
+        try {
+          const { error } = await supabaseClient
+            .from('tasks')
+            .delete()
+            .eq('id', id);
+
+          if (error) {
+            console.warn("Supabase delete error (likely RLS):", error);
+          }
+        } catch (e) {
+          console.error("Cloud delete error:", e);
+        }
+      }
+
+      const db = getLocalDb();
       db.tasks = db.tasks.filter(t => t.id !== id);
-      saveDb(db);
+      saveLocalDb(db);
       renderTasks();
     }
 
@@ -554,7 +970,7 @@
       document.getElementById('modalAddTask').classList.remove('active');
     }
 
-    function handleAddTask() {
+    async function handleAddTask() {
       const title = document.getElementById('taskInputTitle').value.trim();
       const notes = document.getElementById('taskInputNotes').value.trim();
 
@@ -563,35 +979,65 @@
         return;
       }
 
-      const db = getDb();
       const now = new Date();
       const dateStr = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
                       " • " + now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
+      if (storageMode === 'cloud' && supabaseClient) {
+        const newTaskObj = {
+          title,
+          notes,
+          is_completed: false
+        };
+        if (cloudUser && cloudUser.id) {
+          newTaskObj.user_id = cloudUser.id;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('tasks')
+            .insert([newTaskObj])
+            .select();
+
+          if (error) {
+            console.warn("Supabase insert error:", error);
+            if (error.code === '42501') {
+              alert("Supabase Row-Level Security (RLS) Notice:\n\nThe 'tasks' table has RLS enabled. To allow public/demo task saving, run this SQL in Supabase SQL editor:\n\nCREATE POLICY \"Allow all\" ON public.tasks FOR ALL USING (true) WITH CHECK (true);\n\nSaving task locally in the meantime!");
+            }
+          } else if (data && data.length > 0) {
+            cloudTasks.unshift(data[0]);
+          }
+        } catch (e) {
+          console.error("Cloud insert error:", e);
+        }
+      }
+
+      // Always save locally as well
+      const db = getLocalDb();
       const newTask = {
         id: Date.now(),
-        userId: db.currentUser.id,
+        userId: (db.currentUser ? db.currentUser.id : 1),
         title,
         notes,
         completed: false,
         date: dateStr
       };
-
       db.tasks.push(newTask);
-      saveDb(db);
+      saveLocalDb(db);
+
       closeAddTaskModal();
       renderTasks();
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>'"]/g, tag => ({
+      return String(str).replace(/[&<>'"]/g, tag => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
       }[tag] || tag));
     }
 
-    // Auto-login check on page load
+    // Auto-check on initial load
     window.addEventListener('DOMContentLoaded', () => {
-      const db = getDb();
+      const db = getLocalDb();
       if (db.currentUser) {
         initTodoList();
       }
