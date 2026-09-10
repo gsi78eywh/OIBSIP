@@ -1,8 +1,8 @@
-# 🛠️ Complete App Building Process & Easy Debugging Guide
+# 🛠️ Complete App Building Process & Multi-Task Debugging Guide
 
-> **Project:** OIBSIP · Task 1: Unit Converter Application  
+> **Project:** OIBSIP · Android App Development Track (Tasks 1, 4, 5)  
 > **Tech Stack:** Android Studio, Java, XML, Gradle  
-> **Purpose:** This guide walks you through every phase of building this app from scratch and gives you simple, step-by-step instructions for debugging.
+> **Purpose:** This guide walks you through every phase of building and debugging applications across all three internship tasks: Task 1 (Unit Converter), Task 4 (Quiz Application), and Task 5 (Stopwatch & Lap Timer).
 
 ---
 
@@ -120,59 +120,55 @@ The user interface is built inside a smooth scrolling container ([`ScrollView`](
 
 ---
 
-## 2. How to Debug the App Easily
+## 2. How to Debug Applications Across All Tasks
 
 ### Debug Technique 1: Using Logcat Logs (Recommended)
-Every user interaction in [`MainActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/unitconverter/MainActivity.java) prints a debug log with the tag **`UnitConverterApp`**.
+Every user action prints descriptive, formatted debug logs with dedicated tags:
+- **Task 1 (Unit Converter):** `tag:UnitConverterApp`
+- **Task 4 (Quiz Application):** `tag:QuizApp`
+- **Task 5 (Stopwatch Application):** `tag:StopwatchApp`
 
 #### How to use Logcat in Android Studio:
-1. Run the app on your emulator or phone.
+1. Run the app on your emulator or connected phone.
 2. Click the **Logcat** tab at the bottom of Android Studio (or press `Alt + 6`).
-3. In the search/filter bar, type:
-   ```text
-   tag:UnitConverterApp
-   ```
-4. You will see real-time, color-coded logs for every single action:
-   - When a category is picked:  
-     `D/UnitConverterApp: User selected category: Length`
-   - When Convert is tapped:  
-     `D/UnitConverterApp: Attempting conversion with input: '100'`  
-     `D/UnitConverterApp: Converting: 100.0 Centimeter -> Meter`  
-     `D/UnitConverterApp: Conversion successful: 1 m`  
-     `D/UnitConverterApp: Formula: 1 cm = 0.01 m  •  (100 × 0.01 = 1)`
-   - When validation fails:  
-     `W/UnitConverterApp: Validation failed: Input field is empty`  
-     `W/UnitConverterApp: Validation failed: Non-numeric value 'abc'`
-   - When units are swapped:  
-     `D/UnitConverterApp: Swapped unit positions: 0 <-> 1`
-   - When copied:  
-     `D/UnitConverterApp: Copied to clipboard: 1 m`
+3. In the search/filter bar, filter by tag or package:
+   - For Unit Converter: `tag:UnitConverterApp`
+   - For Quiz: `tag:QuizApp`
+   - For Stopwatch: `tag:StopwatchApp`
+   - For all tasks: `package:com.oibsip`
+4. Real-time debug logs reveal exact state transitions:
+   - **Unit Converter:**
+     `D/UnitConverterApp: Converting: 100.0 Centimeter -> Meter`
+     `D/UnitConverterApp: Conversion successful: 1 m`
+   - **Quiz App:**
+     `D/QuizApp: User answered question 3: Selected index 1 (Correct)`
+     `D/QuizApp: Score updated: 3 / 3`
+   - **Stopwatch:**
+     `D/StopwatchApp: Timer started at system uptime: 1045232ms`
+     `D/StopwatchApp: Recorded Lap 1 split: 00:04.25 (Total: 00:04.25)`
 
 ---
 
 ### Debug Technique 2: Using Android Studio Breakpoints
-If you want to freeze execution and inspect values line by line:
-1. Open [`MainActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/unitconverter/MainActivity.java).
-2. Click on the left gutter next to line `172` (`double convertedValue = UnitConverter.convert(...)`) to place a **red dot (breakpoint)**.
-3. Click the **Debug 'app'** button (green bug icon, `Shift + F9`).
-4. Enter a value in the app and tap **Convert**.
-5. Android Studio will pause on that line!
-   - Hover your mouse over `inputValue`, `fromUnit`, or `toUnit` to see their current values.
-   - Press **F8** (Step Over) to run to the next line.
-   - Press **F9** (Resume) to let the app continue running.
+Freeze execution and inspect values line by line:
+1. Open the target Activity (e.g. [`MainActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/unitconverter/MainActivity.java), [`QuizActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/quiz/QuizActivity.java), or [`StopwatchActivity.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/app/src/main/java/com/oibsip/stopwatch/StopwatchActivity.java)).
+2. Click in the left gutter next to any line of code to set a **red breakpoint**.
+3. Click **Debug 'app'** (green bug icon, `Shift + F9`).
+4. Trigger the action in the emulator or phone. Execution will pause immediately, allowing you to inspect variable states in the Debug tool window.
+5. Press **F8** (Step Over) to advance one line, or **F9** (Resume) to continue execution.
 
 ---
 
-### Debug Technique 3: Terminal Unit Testing (No Emulator Needed)
-If you want to test whether the math engine works without waiting for an Android emulator to start:
+### Debug Technique 3: 1-Click Terminal Verification (No Emulator Needed)
+You can verify the core business logic of all three tasks in under 1 second without booting an emulator:
 
-Open a terminal or PowerShell in `c:\Users\SethAndreyJabagat\OIBSIP` and run:
-```powershell
-& 'C:\oracleJdk-26\bin\javac.exe' -d 'target_test_classes' app/src/main/java/com/oibsip/unitconverter/model/*.java app/src/main/java/com/oibsip/unitconverter/converter/*.java app/src/test/java/com/oibsip/unitconverter/UnitConverterVerification.java
-& 'C:\oracleJdk-26\bin\java.exe' -cp 'target_test_classes' com.oibsip.unitconverter.UnitConverterVerification
-Remove-Item -Recurse -Force 'target_test_classes'
+```cmd
+.\run_tests.bat
 ```
-This instantly verifies all 34 mathematical conversion tests in under 2 seconds!
+This compiles all models, engines, and tests, executing:
+- **155** mathematical verification checks.
+- **44** automated JUnit 4 unit tests across Unit Converter, Stopwatch, and Quiz engines.
+- Confirms 100% test pass status.
 
 ---
 

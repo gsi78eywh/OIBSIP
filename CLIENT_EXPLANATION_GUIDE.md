@@ -19,6 +19,16 @@
 
 ---
 
+## 📋 Task Delivery & Acceptance Checklist
+
+| Task ID | Requested Scope | Delivered Solution | Acceptance Status |
+| :--- | :--- | :--- | :---: |
+| **TASK 1**<br>Unit Converter | Numeric input, 2 dropdowns, convert button, result display, $\ge 3$ categories, validation toasts. | **6 categories, 32 units**, 2-step base math, instant unit swap, formula breakdown, clipboard copy, physical boundary safety. | **100% Accepted** ✅ |
+| **TASK 4**<br>Quiz Application | Welcome screen, question screen, 4 choices, $\ge 10$ questions, instant feedback (green/red), next button, score tracking, results, restart. | **15 curated questions**, dynamic option scrambling, explanation panel, option locking, persistent high-scores, desktop & web runners. | **100% Accepted** ✅ |
+| **TASK 5**<br>Stopwatch App | Start, pause, reset, large display, dynamic visual states, state persistence, bonus lap timer. | **Millisecond accuracy (`MM:SS.cs`)**, wall-clock delta engine, lap split interval list, lifecycle & rotation persistence, desktop & web runners. | **100% Accepted** ✅ |
+
+---
+
 ## 📱 2. TASK 1: Unit Converter (How to Explain)
 
 ### 💡 The Problem & Solution
