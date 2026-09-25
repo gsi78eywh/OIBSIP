@@ -38,12 +38,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      justify-content: flex-start;
+      padding: 16px;
+    }
+    @media (min-height: 860px) {
+      body {
+        justify-content: center;
+      }
       color: #F8FAFC;
     }
 
-    .top-banner { text-align: center; margin-bottom: 20px; }
+    .top-banner { text-align: center; margin-bottom: 12px; }
     .badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3);
@@ -67,10 +72,10 @@
       background: var(--primary); color: #FFFFFF; border-color: var(--primary);
     }
 
-    /* Mobile Device Frame */
     .phone-container {
-      width: 100%; max-width: 412px; height: 780px;
-      background: var(--device-bg); border-radius: 44px;
+      width: 100%; max-width: 412px; height: min(720px, calc(100vh - 120px));
+      min-height: 520px;
+      background: var(--device-bg); border-radius: 32px;
       box-shadow: var(--shadow-phone); display: flex; flex-direction: column;
       overflow: hidden; position: relative; border: 4px solid #334155;
     }
@@ -85,7 +90,6 @@
       flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 16px 20px 24px;
     }
 
-    /* Common Card Styles */
     .card {
       background: var(--card-bg); border: 1px solid var(--border);
       border-radius: 18px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -113,7 +117,6 @@
       background: #F1F5F9; color: var(--text-main);
     }
 
-    /* Screen 1: Welcome */
     #screen-welcome {
       display: flex; flex-direction: column; justify-content: space-between;
     }
@@ -139,7 +142,6 @@
       display: flex; flex-direction: column; gap: 8px; text-align: left;
     }
 
-    /* Screen 2: Question */
     #screen-question { display: none; }
     .status-row {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
@@ -213,7 +215,6 @@
       font-size: 12px; color: var(--text-muted); line-height: 1.35;
     }
 
-    /* Screen 3: Result */
     #screen-result { display: none; text-align: center; }
     .result-hero {
       padding: 24px 16px; margin: 10px 0 18px;
@@ -234,7 +235,7 @@
     }
 
     .stats-row {
-      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;
     }
     .stat-card {
       background: #FFFFFF; border: 1px solid var(--border); border-radius: 14px;
@@ -256,7 +257,6 @@
 </head>
 <body>
 
-  <!-- Top Banner -->
   <div class="top-banner">
     <div class="badge">Oasis Infobyte · Task 4</div>
     <h1>Computer Science &amp; Tech Quiz</h1>
@@ -268,14 +268,12 @@
     </div>
   </div>
 
-  <!-- Mobile Device Simulation Frame -->
   <div class="phone-container">
     <div class="status-bar">
       <span id="live-time">9:41</span>
       <span>●●● 5G 100%</span>
     </div>
 
-    <!-- 1. Welcome Screen -->
     <div id="screen-welcome" class="app-screen">
       <div class="hero-box">
         <div class="card" style="margin-bottom: 16px;">
@@ -309,7 +307,6 @@
       </div>
     </div>
 
-    <!-- 2. Question Screen -->
     <div id="screen-question" class="app-screen">
       <div>
         <div class="status-row">
@@ -329,7 +326,7 @@
       </div>
 
       <div class="options-list" id="options-container">
-        <!-- 4 Option Buttons generated dynamically -->
+
       </div>
 
       <div class="explanation-card" id="explanation-box">
@@ -344,7 +341,6 @@
       </div>
     </div>
 
-    <!-- 3. Result Screen -->
     <div id="screen-result" class="app-screen">
       <div class="card result-hero">
         <div class="trophy-icon">🏆</div>
@@ -385,9 +381,7 @@
 
   </div>
 
-  <script>
-    // Live Clock
-    function updateClock() {
+  <script>    function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
@@ -396,7 +390,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // 15 Curated Questions Matching Java QuestionBank
     const QUESTION_BANK = [
       {
         id: 1,
@@ -520,14 +513,12 @@
       }
     ];
 
-    // Quiz Session State
     let currentQuestions = [];
     let currentIndex = 0;
     let score = 0;
     let answerSubmitted = false;
     let personalBest = localStorage.getItem('oibsip_quiz_high_score') || -1;
 
-    // DOM Elements
     const screenWelcome = document.getElementById('screen-welcome');
     const screenQuestion = document.getElementById('screen-question');
     const screenResult = document.getElementById('screen-result');
@@ -556,7 +547,6 @@
     const btnRestart = document.getElementById('btn-restart');
     const btnBackMenu = document.getElementById('btn-back-menu');
 
-    // Update Welcome Personal Best
     function refreshPersonalBestDisplay() {
       if (personalBest >= 0) {
         welcomeBestVal.textContent = `${personalBest}%`;
@@ -566,17 +556,15 @@
     }
     refreshPersonalBestDisplay();
 
-    // Start Quiz
     btnStartQuiz.addEventListener('click', () => {
       startQuiz();
     });
 
     function startQuiz() {
-      // Sample 10 randomized questions
+
       const pool = [...QUESTION_BANK].sort(() => Math.random() - 0.5);
       const sampled = pool.slice(0, 10);
 
-      // Shuffle options inside each question while preserving correct index
       currentQuestions = sampled.map(q => {
         const correctText = q.options[q.correctIndex];
         const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
@@ -615,7 +603,6 @@
       btnNext.disabled = true;
       btnNext.textContent = (currentIndex + 1 < total) ? "Next Question" : "View Results";
 
-      // Render 4 options
       optionsContainer.innerHTML = '';
       const letters = ['A', 'B', 'C', 'D'];
 
@@ -656,13 +643,12 @@
             icon.textContent = '❌';
           }
         } else if (idx === q.correctIndex) {
-          // Reveal correct answer if user got it wrong
+
           btn.classList.add('correct');
           icon.textContent = '✅';
         }
       });
 
-      // Show explanation
       explanationBox.style.display = 'block';
       if (isCorrect) {
         explanationTitle.textContent = '✅ Correct Answer';
@@ -731,6 +717,7 @@
       screenWelcome.style.display = 'flex';
       refreshPersonalBestDisplay();
     });
-  </script>
+
+</script>
 </body>
 </html>

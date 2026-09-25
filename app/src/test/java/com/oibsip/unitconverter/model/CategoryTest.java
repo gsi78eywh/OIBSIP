@@ -6,9 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Unit tests for Category enum metadata, descriptions, and string representations.
- */
 public class CategoryTest {
 
     @Test

@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         dbHelper = new TodoDbHelper(this);
 
-        // If user already logged in, navigate straight to To-Do List
         if (sessionManager.isLoggedIn()) {
             navigateToTodoList();
             return;

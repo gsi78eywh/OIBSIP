@@ -5,16 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents a single multiple-choice quiz question.
- * 
- * Each question contains:
- * - A unique identifier and prompt text
- * - Exactly 4 answer options
- * - The index of the correct option (0 to 3)
- * - An explanation describing why the correct answer is right
- * - Category and difficulty metadata
- */
 public class Question {
 
     private final int id;
@@ -76,20 +66,10 @@ public class Question {
         return difficulty;
     }
 
-    /**
-     * Checks if the provided option index matches the correct answer.
-     *
-     * @param selectedIndex Zero-based index of chosen option
-     * @return true if correct, false otherwise
-     */
     public boolean isCorrect(int selectedIndex) {
         return selectedIndex == correctOptionIndex;
     }
 
-    /**
-     * Returns a new Question instance where the 4 options are shuffled randomly,
-     * while correctly updating the correctOptionIndex to point to the new location.
-     */
     public Question createShuffledCopy() {
         String correctOptionText = options.get(correctOptionIndex);
         List<String> shuffledOptions = new ArrayList<>(options);

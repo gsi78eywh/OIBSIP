@@ -8,7 +8,6 @@
     android:background="@color/background"
     tools:context="com.oibsip.stopwatch.StopwatchActivity">
 
-    <!-- Top App Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +42,6 @@
                 android:textColor="@color/text_primary" />
         </LinearLayout>
 
-        <!-- Navigation Button to Switch to Unit Converter -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSwitchToConverter"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -55,7 +53,6 @@
             android:contentDescription="Switch to Unit Converter application" />
     </LinearLayout>
 
-    <!-- Digital Dial Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,7 +76,6 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
-            <!-- State Badge (READY / RUNNING / PAUSED) -->
             <TextView
                 android:id="@+id/tvStateBadge"
                 android:layout_width="wrap_content"
@@ -96,7 +92,6 @@
                 android:paddingBottom="4dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Time Display: Main Digits + Centiseconds -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +122,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Action Buttons Controls -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,7 +131,6 @@
         android:layout_marginBottom="20dp"
         android:gravity="center">
 
-        <!-- Reset Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnReset"
             style="@style/Widget.Material3.Button.OutlinedButton"
@@ -154,7 +147,6 @@
             android:textColor="@color/stopwatch_reset"
             app:iconTint="@color/stopwatch_reset" />
 
-        <!-- Lap Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLap"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -168,7 +160,6 @@
             app:icon="@drawable/ic_lap"
             app:iconSize="18dp" />
 
-        <!-- Pause Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPause"
             android:layout_width="0dp"
@@ -182,7 +173,6 @@
             app:iconSize="18dp"
             android:backgroundTint="@color/stopwatch_pause" />
 
-        <!-- Start / Resume Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStart"
             android:layout_width="0dp"
@@ -197,7 +187,6 @@
 
     </LinearLayout>
 
-    <!-- Lap History Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -227,7 +216,6 @@
             android:layout_marginStart="6dp" />
     </LinearLayout>
 
-    <!-- Scrollable Lap List -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

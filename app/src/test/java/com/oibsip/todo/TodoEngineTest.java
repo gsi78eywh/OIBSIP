@@ -34,9 +34,9 @@ public class TodoEngineTest {
         String hash2 = PasswordHasher.hash(plain);
 
         assertNotNull(hash1);
-        assertEquals(64, hash1.length()); // SHA-256 hex is exactly 64 chars
-        assertEquals(hash1, hash2); // Deterministic hashing
-        assertNotEquals(plain, hash1); // Never stores plain text
+        assertEquals(64, hash1.length());
+        assertEquals(hash1, hash2);
+        assertNotEquals(plain, hash1);
         assertTrue(PasswordHasher.verify(plain, hash1));
         assertFalse(PasswordHasher.verify("WrongPassword", hash1));
     }
@@ -70,7 +70,7 @@ public class TodoEngineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterUser_ShortPassword() {
-        engine.registerUser("User", "user@example.com", "12345"); // < 6 chars
+        engine.registerUser("User", "user@example.com", "12345");
     }
 
     @Test
@@ -164,7 +164,7 @@ public class TodoEngineTest {
         engine.updateTaskStatus(t1.getId(), true);
 
         int[] counts = engine.getTaskCounts(user.getId());
-        assertEquals(2, counts[0]); // 2 pending
-        assertEquals(1, counts[1]); // 1 completed
+        assertEquals(2, counts[0]);
+        assertEquals(1, counts[1]);
     }
 }

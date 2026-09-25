@@ -11,22 +11,12 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Modern Windows Desktop GUI application for TASK 4: Quiz Application.
- * 
- * Provides an authentic Material-styled desktop experience runnable directly on Windows:
- * 1. Welcome Screen with rules, topic summary, and Personal Best tracking.
- * 2. Question Screen with 4 styled options, instant green/red answer highlighting,
- *    explanation reveal, question counter, progress bar, and score badge.
- * 3. Results Screen with score percentage, grade, stat breakdowns, and restart.
- */
 public class DesktopQuizApp extends JFrame {
 
     private final QuizEngine engine = new QuizEngine();
     private static final int QUIZ_QUESTION_COUNT = 10;
     private int personalBestPercentage = -1;
 
-    // Card Layout Container
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainContainer = new JPanel(cardLayout);
 
@@ -34,25 +24,22 @@ public class DesktopQuizApp extends JFrame {
     private static final String CARD_QUESTION = "question";
     private static final String CARD_RESULT = "result";
 
-    // Palette Colors matching Android colors.xml
-    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);      // Indigo #4338CA
-    private static final Color COLOR_PRIMARY_DARK = new Color(0x31, 0x2E, 0x81); // Deep Indigo #312E81
-    private static final Color COLOR_PRIMARY_BG = new Color(0xEE, 0xF2, 0xFF);   // Indigo 50 #EEF2FF
-    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);           // Slate 50 #F8FAFC
+    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);
+    private static final Color COLOR_PRIMARY_DARK = new Color(0x31, 0x2E, 0x81);
+    private static final Color COLOR_PRIMARY_BG = new Color(0xEE, 0xF2, 0xFF);
+    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);
     private static final Color COLOR_CARD_BG = Color.WHITE;
-    private static final Color COLOR_BORDER = new Color(0xE2, 0xE8, 0xF0);        // Slate 200 #E2E8F0
-    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);     // Slate 900 #0F172A
-    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);    // Slate 500 #64748B
-    private static final Color COLOR_CORRECT = new Color(0x10, 0xB9, 0x81);       // Emerald 500 #10B981
-    private static final Color COLOR_CORRECT_BG = new Color(0xD1, 0xFA, 0xE5);    // Emerald 100 #D1FAE5
-    private static final Color COLOR_WRONG = new Color(0xEF, 0x44, 0x44);         // Red 500 #EF4444
-    private static final Color COLOR_WRONG_BG = new Color(0xFE, 0xE2, 0xE2);      // Red 100 #FEE2E2
-    private static final Color COLOR_GOLD = new Color(0xF5, 0x9E, 0x0B);          // Amber 500 #F59E0B
+    private static final Color COLOR_BORDER = new Color(0xE2, 0xE8, 0xF0);
+    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);
+    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);
+    private static final Color COLOR_CORRECT = new Color(0x10, 0xB9, 0x81);
+    private static final Color COLOR_CORRECT_BG = new Color(0xD1, 0xFA, 0xE5);
+    private static final Color COLOR_WRONG = new Color(0xEF, 0x44, 0x44);
+    private static final Color COLOR_WRONG_BG = new Color(0xFE, 0xE2, 0xE2);
+    private static final Color COLOR_GOLD = new Color(0xF5, 0x9E, 0x0B);
 
-    // --- Welcome Screen Widgets ---
     private JLabel lblPersonalBest;
 
-    // --- Question Screen Widgets ---
     private JLabel lblQuestionCounter;
     private JLabel lblScoreBadge;
     private JProgressBar progressBar;
@@ -64,7 +51,6 @@ public class DesktopQuizApp extends JFrame {
     private JTextArea txtExplanation;
     private JButton btnNext;
 
-    // --- Result Screen Widgets ---
     private JLabel lblResultPercentage;
     private JLabel lblResultGrade;
     private JLabel lblResultFeedback;
@@ -89,16 +75,11 @@ public class DesktopQuizApp extends JFrame {
         cardLayout.show(mainContainer, CARD_WELCOME);
     }
 
-    // =========================================================================
-    // 1. WELCOME SCREEN
-    // =========================================================================
-
     private void initWelcomePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(COLOR_BG);
         panel.setBorder(new EmptyBorder(24, 28, 28, 28));
 
-        // Top Header
         JPanel headerPanel = new JPanel(new GridLayout(2, 1, 0, 4));
         headerPanel.setOpaque(false);
 
@@ -114,13 +95,11 @@ public class DesktopQuizApp extends JFrame {
         headerPanel.add(lblTitle);
         panel.add(headerPanel, BorderLayout.NORTH);
 
-        // Center Content Box
         JPanel centerBox = new JPanel();
         centerBox.setLayout(new BoxLayout(centerBox, BoxLayout.Y_AXIS));
         centerBox.setOpaque(false);
         centerBox.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-        // Hero Card
         JPanel heroCard = new JPanel();
         heroCard.setLayout(new BoxLayout(heroCard, BoxLayout.Y_AXIS));
         heroCard.setBackground(COLOR_CARD_BG);
@@ -159,7 +138,6 @@ public class DesktopQuizApp extends JFrame {
 
         centerBox.add(Box.createVerticalStrut(16));
 
-        // Rules Card
         JPanel rulesCard = new JPanel(new GridLayout(3, 1, 0, 6));
         rulesCard.setBackground(COLOR_CARD_BG);
         rulesCard.setBorder(BorderFactory.createCompoundBorder(
@@ -184,7 +162,6 @@ public class DesktopQuizApp extends JFrame {
 
         panel.add(centerBox, BorderLayout.CENTER);
 
-        // Bottom Action Button
         JButton btnStart = createStyledButton("🚀 Start Quiz", COLOR_PRIMARY, Color.WHITE);
         btnStart.setPreferredSize(new Dimension(0, 52));
         btnStart.addActionListener(e -> startQuizSession());
@@ -193,16 +170,11 @@ public class DesktopQuizApp extends JFrame {
         mainContainer.add(panel, CARD_WELCOME);
     }
 
-    // =========================================================================
-    // 2. QUESTION SCREEN
-    // =========================================================================
-
     private void initQuestionPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(COLOR_BG);
         panel.setBorder(new EmptyBorder(20, 24, 20, 24));
 
-        // Top Status Panel
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
@@ -241,13 +213,11 @@ public class DesktopQuizApp extends JFrame {
 
         panel.add(topPanel, BorderLayout.NORTH);
 
-        // Center Content Box (Question Card + 4 Option Buttons + Explanation)
         JPanel centerBox = new JPanel();
         centerBox.setLayout(new BoxLayout(centerBox, BoxLayout.Y_AXIS));
         centerBox.setOpaque(false);
         centerBox.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-        // Question Prompt Card
         JPanel questionCard = new JPanel(new BorderLayout());
         questionCard.setBackground(COLOR_CARD_BG);
         questionCard.setBorder(BorderFactory.createCompoundBorder(
@@ -262,7 +232,6 @@ public class DesktopQuizApp extends JFrame {
         centerBox.add(questionCard);
         centerBox.add(Box.createVerticalStrut(14));
 
-        // 4 Option Buttons
         for (int i = 0; i < 4; i++) {
             final int index = i;
             btnOptions[i] = new JButton("Option " + (char)('A' + i));
@@ -283,7 +252,6 @@ public class DesktopQuizApp extends JFrame {
             centerBox.add(Box.createVerticalStrut(8));
         }
 
-        // Explanation Panel (Initially Hidden)
         panelExplanation = new JPanel(new BorderLayout());
         panelExplanation.setBackground(COLOR_CARD_BG);
         panelExplanation.setBorder(BorderFactory.createCompoundBorder(
@@ -311,7 +279,6 @@ public class DesktopQuizApp extends JFrame {
         centerBox.add(panelExplanation);
         panel.add(centerBox, BorderLayout.CENTER);
 
-        // Next Button
         btnNext = createStyledButton("Next Question", COLOR_PRIMARY, Color.WHITE);
         btnNext.setPreferredSize(new Dimension(0, 48));
         btnNext.setEnabled(false);
@@ -321,16 +288,11 @@ public class DesktopQuizApp extends JFrame {
         mainContainer.add(panel, CARD_QUESTION);
     }
 
-    // =========================================================================
-    // 3. RESULT SCREEN
-    // =========================================================================
-
     private void initResultPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(COLOR_BG);
         panel.setBorder(new EmptyBorder(24, 28, 28, 28));
 
-        // Center Box
         JPanel centerBox = new JPanel();
         centerBox.setLayout(new BoxLayout(centerBox, BoxLayout.Y_AXIS));
         centerBox.setOpaque(false);
@@ -350,7 +312,6 @@ public class DesktopQuizApp extends JFrame {
         centerBox.add(lblTitle);
         centerBox.add(Box.createVerticalStrut(20));
 
-        // Hero Score Card
         JPanel scoreCard = new JPanel();
         scoreCard.setLayout(new BoxLayout(scoreCard, BoxLayout.Y_AXIS));
         scoreCard.setBackground(COLOR_CARD_BG);
@@ -397,7 +358,6 @@ public class DesktopQuizApp extends JFrame {
 
         centerBox.add(Box.createVerticalStrut(18));
 
-        // Stats Row (Correct, Wrong, Total)
         JPanel statsRow = new JPanel(new GridLayout(1, 3, 10, 0));
         statsRow.setOpaque(false);
 
@@ -412,7 +372,6 @@ public class DesktopQuizApp extends JFrame {
 
         panel.add(centerBox, BorderLayout.CENTER);
 
-        // Bottom Buttons
         JPanel bottomButtons = new JPanel(new GridLayout(2, 1, 0, 8));
         bottomButtons.setOpaque(false);
 
@@ -451,10 +410,6 @@ public class DesktopQuizApp extends JFrame {
         p.add(l);
         return p;
     }
-
-    // =========================================================================
-    // GAMEPLAY CONTROLS & EVENT HANDLERS
-    // =========================================================================
 
     private void startQuizSession() {
         engine.start(QUIZ_QUESTION_COUNT, true);
@@ -505,7 +460,6 @@ public class DesktopQuizApp extends JFrame {
         boolean isCorrect = engine.submitAnswer(selectedIndex);
         int correctIndex = q.getCorrectOptionIndex();
 
-        // Lock options
         for (JButton b : btnOptions) {
             b.setEnabled(false);
         }
@@ -543,7 +497,7 @@ public class DesktopQuizApp extends JFrame {
             engine.nextQuestion();
             displayCurrentQuestion();
         } else {
-            engine.nextQuestion(); // Transitions to COMPLETED
+            engine.nextQuestion();
             displayResultScreen();
         }
     }
@@ -580,10 +534,6 @@ public class DesktopQuizApp extends JFrame {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return btn;
     }
-
-    // =========================================================================
-    // MAIN DESKTOP LAUNCHER
-    // =========================================================================
 
     public static void main(String[] args) {
         try {

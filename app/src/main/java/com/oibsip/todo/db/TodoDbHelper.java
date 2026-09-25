@@ -17,7 +17,6 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "oibsip_todo.db";
     private static final int DATABASE_VERSION = 1;
 
-    // Table: users
     public static final String TABLE_USERS = "users";
     public static final String COL_USER_ID = "id";
     public static final String COL_USER_NAME = "name";
@@ -25,7 +24,6 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public static final String COL_USER_PASSWORD_HASH = "password_hash";
     public static final String COL_USER_CREATED_AT = "created_at";
 
-    // Table: tasks
     public static final String TABLE_TASKS = "tasks";
     public static final String COL_TASK_ID = "id";
     public static final String COL_TASK_USER_ID = "user_id";
@@ -69,8 +67,6 @@ public class TodoDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
-
-    // --- User Authentication Methods ---
 
     public boolean isEmailRegistered(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -138,8 +134,6 @@ public class TodoDbHelper extends SQLiteOpenHelper {
         }
         return user;
     }
-
-    // --- Task CRUD Methods ---
 
     public long insertTask(long userId, String title, String notes) {
         SQLiteDatabase db = this.getWritableDatabase();

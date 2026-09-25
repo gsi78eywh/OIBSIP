@@ -20,7 +20,6 @@ public class DesktopTodoApp extends JFrame {
     private User currentUser = null;
     private String currentFilter = "ALL";
 
-    // Views in To-Do List screen
     private JLabel lblGreeting;
     private JLabel lblTaskCounts;
     private JPanel taskListPanel;
@@ -60,8 +59,6 @@ public class DesktopTodoApp extends JFrame {
         add(mainContainer);
     }
 
-    // --- SCREEN 1: LOGIN ---
-
     private JPanel createLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(new Color(248, 250, 252));
@@ -72,7 +69,6 @@ public class DesktopTodoApp extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // Header
         JLabel lblTitle = new JLabel("Welcome Back", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(15, 23, 42));
@@ -81,7 +77,6 @@ public class DesktopTodoApp extends JFrame {
         lblSubtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblSubtitle.setForeground(new Color(71, 85, 105));
 
-        // Form Card
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(Color.WHITE);
@@ -138,7 +133,6 @@ public class DesktopTodoApp extends JFrame {
         card.add(Box.createVerticalStrut(20));
         card.add(btnLogin);
 
-        // Switch to Register
         JLabel lblGoRegister = new JLabel("Don't have an account? Sign Up", SwingConstants.CENTER);
         lblGoRegister.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblGoRegister.setForeground(new Color(67, 56, 202));
@@ -157,8 +151,6 @@ public class DesktopTodoApp extends JFrame {
 
         return panel;
     }
-
-    // --- SCREEN 2: REGISTER ---
 
     private JPanel createRegisterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -263,13 +255,10 @@ public class DesktopTodoApp extends JFrame {
         return panel;
     }
 
-    // --- SCREEN 3: TO-DO LIST ---
-
     private JPanel createTodoListPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(248, 250, 252));
 
-        // Header Panel
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.WHITE);
         header.setBorder(BorderFactory.createCompoundBorder(
@@ -307,7 +296,6 @@ public class DesktopTodoApp extends JFrame {
         header.add(userBox, BorderLayout.WEST);
         header.add(btnLogout, BorderLayout.EAST);
 
-        // Filter Bar & Add Button
         JPanel toolBar = new JPanel(new BorderLayout());
         toolBar.setBackground(new Color(248, 250, 252));
         toolBar.setBorder(new EmptyBorder(12, 20, 8, 20));
@@ -338,7 +326,6 @@ public class DesktopTodoApp extends JFrame {
         toolBar.add(filterGroup, BorderLayout.WEST);
         toolBar.add(btnAdd, BorderLayout.EAST);
 
-        // Center: Task List or Empty State
         taskListPanel = new JPanel();
         taskListPanel.setLayout(new BoxLayout(taskListPanel, BoxLayout.Y_AXIS));
         taskListPanel.setBackground(new Color(248, 250, 252));
@@ -349,7 +336,6 @@ public class DesktopTodoApp extends JFrame {
         scrollPane.setBackground(new Color(248, 250, 252));
         scrollPane.getVerticalScrollBar().setUnitIncrement(12);
 
-        // Empty state
         emptyStatePanel = new JPanel(new GridBagLayout());
         emptyStatePanel.setBackground(new Color(248, 250, 252));
         JLabel lblEmpty = new JLabel("<html><center><b>No Tasks Found</b><br><span style='color:#64748B;'>You're all caught up! Click '+ Add Task' above.</span></center></html>", SwingConstants.CENTER);
@@ -422,13 +408,11 @@ public class DesktopTodoApp extends JFrame {
         ));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 85));
 
-        // Checkbox
         JCheckBox cb = new JCheckBox();
         cb.setSelected(task.isCompleted());
         cb.setBackground(Color.WHITE);
         cb.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Info
         JPanel info = new JPanel();
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
         info.setBackground(Color.WHITE);
@@ -456,7 +440,6 @@ public class DesktopTodoApp extends JFrame {
         info.add(Box.createVerticalStrut(4));
         info.add(lblDate);
 
-        // Delete button
         JButton btnDel = new JButton("✕");
         btnDel.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnDel.setForeground(new Color(239, 68, 68));

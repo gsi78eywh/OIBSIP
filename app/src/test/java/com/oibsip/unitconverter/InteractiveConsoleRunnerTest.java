@@ -9,9 +9,6 @@ import java.io.PrintStream;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Unit tests for InteractiveConsoleRunner direct CLI execution and error handling.
- */
 public class InteractiveConsoleRunnerTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

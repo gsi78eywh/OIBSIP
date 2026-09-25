@@ -163,7 +163,7 @@ Open files: [`StopwatchEngine.java`](file:///c:/Users/SethAndreyJabagat/OIBSIP/a
 ### Q2: *"How are passwords protected in Task 2?"*
 > **Answer:** *"Passwords are hashed using SHA-256 via standard Java MessageDigest. We store a 64-character hexadecimal hash in SQLite instead of plaintext. The original password can never be recovered from the database."*
 
-### Q3: *"What happens if the user rotates their phone?"*
+### Q3: *"What happens if the     user rotates their phone?"*
 > **Answer:** *"All apps implement state preservation using `onSaveInstanceState` and `onRestoreInstanceState` (or SharedPreferences/SQLite). Screen rotation never loses timing, active inputs, or user session data."*
 
 ### Q4: *"Can someone run this without having Android Studio or an Android phone?"*

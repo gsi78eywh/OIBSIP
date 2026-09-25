@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Official Supabase JS v2 Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -26,7 +25,7 @@
       --success: #10B981;
       --success-bg: #D1FAE5;
       --supabase-green: #3ECF8E;
-      --shadow-phone: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 12px #1E293B;
+      --shadow-phone: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 10px #1E293B;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,131 +37,152 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      justify-content: flex-start;
+      padding: 16px;
       color: #F8FAFC;
     }
 
-    .top-banner { text-align: center; margin-bottom: 16px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3);
-      color: #A5B4FC; padding: 4px 14px; border-radius: 9999px;
-      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+    @media (min-height: 860px) {
+      body {
+        justify-content: center;
+      }
     }
-    .top-banner h1 { font-size: 24px; font-weight: 800; color: #FFFFFF; }
-    .top-banner p { color: #94A3B8; font-size: 14px; margin-top: 4px; }
+
+    .top-banner {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      color: #A5B4FC;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .top-banner h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .top-banner p {
+      color: #94A3B8;
+      font-size: 13px;
+      margin-top: 2px;
+    }
 
     .nav-links {
-      display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
     }
+
     .nav-links a {
-      color: #A5B4FC; font-size: 13px; text-decoration: none; font-weight: 600;
-      padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.05);
+      color: #A5B4FC;
+      font-size: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
       transition: all 0.2s;
     }
+
     .nav-links a:hover, .nav-links a.active {
-      background: rgba(99, 102, 241, 0.3); color: #FFFFFF;
+      background: rgba(99, 102, 241, 0.3);
+      color: #FFFFFF;
     }
 
-    /* Supabase Cloud Connection Bar */
-    .cloud-status-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(62, 207, 142, 0.3);
-      padding: 8px 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      width: 100%;
-      max-width: 420px;
-      font-size: 12px;
-      backdrop-filter: blur(8px);
-    }
-    .cloud-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #E2E8F0;
-      font-weight: 600;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--supabase-green);
-      box-shadow: 0 0 8px var(--supabase-green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(0.9); }
-    }
-    .backend-tag {
-      background: rgba(62, 207, 142, 0.2);
-      color: var(--supabase-green);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 11px;
-    }
-
-    /* Mobile Frame */
     .device-frame {
       width: 100%;
-      max-width: 420px;
-      height: 750px;
+      max-width: 412px;
+      height: min(720px, calc(100vh - 120px));
+      min-height: 520px;
       background: var(--device-bg);
-      border-radius: 36px;
+      border-radius: 32px;
       box-shadow: var(--shadow-phone);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
       color: var(--text-main);
+      border: 3px solid #334155;
     }
 
     .status-bar {
-      height: 28px;
+      height: 32px;
       background: var(--card-bg);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
-      font-size: 12px;
+      padding: 0 16px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border);
     }
 
-    /* Storage Mode Switcher */
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--supabase-green);
+      box-shadow: 0 0 6px var(--supabase-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
     .mode-tab-bar {
       display: flex;
       background: #F1F5F9;
-      padding: 4px;
-      margin: 8px 16px 0;
-      border-radius: 10px;
+      padding: 3px;
+      margin: 6px 14px 2px;
+      border-radius: 8px;
       gap: 4px;
     }
+
     .mode-tab {
       flex: 1;
       text-align: center;
-      padding: 6px;
+      padding: 5px;
       border: none;
       background: transparent;
-      border-radius: 8px;
-      font-size: 12px;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s;
     }
+
     .mode-tab.active {
       background: #FFFFFF;
       color: var(--primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
     .screen {
@@ -171,133 +191,194 @@
       display: none;
       flex-direction: column;
     }
-    .screen.active { display: flex; }
 
-    /* Auth Screens */
+    .screen.active {
+      display: flex;
+    }
+
     .auth-container {
       flex: 1;
-      padding: 24px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
+
     .auth-logo {
-      width: 60px; height: 60px;
+      width: 44px;
+      height: 44px;
       background: var(--primary-light);
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--primary); font-size: 26px; margin-bottom: 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 20px;
+      margin-bottom: 8px;
     }
-    .auth-title { font-size: 20px; font-weight: 800; color: var(--text-main); }
-    .auth-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 4px; text-align: center; margin-bottom: 18px; }
+
+    .auth-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .auth-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
 
     .form-card {
       width: 100%;
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 14px;
+      padding: 14px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     }
-    .input-group { margin-bottom: 12px; }
-    .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+
+    .input-group {
+      margin-bottom: 10px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
     .input-group input {
-      width: 100%; height: 42px; padding: 0 14px;
-      border-radius: 10px; border: 1px solid var(--border);
-      font-size: 14px; font-family: inherit; color: var(--text-main);
-      outline: none; transition: border-color 0.2s;
+      width: 100%;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
     }
-    .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1); }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.1);
+    }
 
     .btn-primary {
-      width: 100%; height: 46px; border-radius: 10px;
-      background: var(--primary); color: #fff; font-size: 14px; font-weight: 700;
-      border: none; cursor: pointer; transition: background 0.2s; margin-top: 6px;
+      width: 100%;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
     }
-    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
 
     .switch-link {
-      margin-top: 16px; font-size: 13px; font-weight: 600;
-      color: var(--primary); cursor: pointer; text-decoration: none;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
     }
 
-    /* Notification banner */
-    .notice-box {
-      margin: 10px 16px 0;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 11px;
-      line-height: 1.4;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-    .notice-info {
-      background: #EFF6FF;
-      border: 1px solid #BFDBFE;
-      color: #1E40AF;
-    }
-    .notice-warning {
-      background: #FEF3C7;
-      border: 1px solid #FDE68A;
-      color: #92400E;
-    }
-
-    /* To-Do List Screen */
     .app-header {
       background: var(--card-bg);
-      padding: 16px 20px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
     }
-    .app-header h2 { font-size: 18px; font-weight: 800; color: var(--text-main); }
-    .app-header p { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
 
-    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .app-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .app-header p {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
 
     .btn-sync {
       background: var(--primary-light);
       border: 1px solid rgba(67, 56, 202, 0.2);
       color: var(--primary);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
     }
-    .btn-sync:hover { background: #E0E7FF; }
+
+    .btn-sync:hover {
+      background: #E0E7FF;
+    }
 
     .btn-logout {
-      background: #F1F5F9; border: none; padding: 6px 12px;
-      border-radius: 8px; font-size: 12px; font-weight: 700;
-      color: var(--danger); cursor: pointer;
+      background: #F1F5F9;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--danger);
+      cursor: pointer;
     }
-    .btn-logout:hover { background: var(--danger-bg); }
+
+    .btn-logout:hover {
+      background: var(--danger-bg);
+    }
 
     .filter-bar {
       display: flex;
-      gap: 8px;
-      padding: 12px 20px;
+      gap: 6px;
+      padding: 8px 16px;
       background: var(--card-bg);
       border-bottom: 1px solid var(--border);
     }
+
     .chip {
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 4px 12px;
+      border-radius: 16px;
       border: 1px solid var(--border);
       background: #fff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.2s;
     }
+
     .chip.active {
       background: var(--primary);
       color: #fff;
@@ -307,23 +388,24 @@
     .task-list {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 20px 80px;
+      padding: 10px 14px 75px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .task-card {
       background: var(--card-bg);
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 12px;
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
       border: 1px solid var(--border);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
       transition: all 0.2s;
     }
+
     .task-card.completed {
       background: #F8FAFC;
       border-color: #CBD5E1;
@@ -331,61 +413,152 @@
     }
 
     .task-checkbox {
-      margin-top: 3px;
-      width: 18px;
-      height: 18px;
+      margin-top: 2px;
+      width: 17px;
+      height: 17px;
       cursor: pointer;
       accent-color: var(--primary);
     }
 
-    .task-info { flex: 1; }
-    .task-title { font-size: 14px; font-weight: 700; color: var(--text-main); word-break: break-word; }
-    .task-title.done { text-decoration: line-through; color: #94A3B8; }
-    .task-notes { font-size: 12px; color: var(--text-muted); margin-top: 3px; word-break: break-word; }
-    .task-date { font-size: 10px; color: #94A3B8; margin-top: 6px; }
+    .task-info {
+      flex: 1;
+    }
+
+    .task-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+
+    .task-title.done {
+      text-decoration: line-through;
+      color: #94A3B8;
+    }
+
+    .task-notes {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    .task-date {
+      font-size: 10px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
 
     .btn-delete {
-      background: none; border: none; color: var(--danger); font-size: 16px;
-      cursor: pointer; padding: 4px; border-radius: 6px;
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 3px;
+      border-radius: 4px;
     }
-    .btn-delete:hover { background: var(--danger-bg); }
 
-    /* Empty state */
+    .btn-delete:hover {
+      background: var(--danger-bg);
+    }
+
     .empty-state {
-      margin: auto; text-align: center; padding: 40px 20px;
+      margin: auto;
+      text-align: center;
+      padding: 32px 16px;
     }
-    .empty-icon { font-size: 42px; margin-bottom: 12px; }
-    .empty-title { font-size: 16px; font-weight: 800; color: var(--text-main); }
-    .empty-msg { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-    /* Floating Action Button */
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .empty-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .empty-msg {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
     .fab {
-      position: absolute; right: 20px; bottom: 20px;
-      width: 52px; height: 52px; border-radius: 50%;
-      background: var(--primary); color: #fff; font-size: 24px;
-      display: flex; align-items: center; justify-content: center;
-      border: none; box-shadow: 0 8px 16px rgba(67, 56, 202, 0.35);
-      cursor: pointer; transition: transform 0.2s;
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      box-shadow: 0 6px 14px rgba(67, 56, 202, 0.35);
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-    .fab:hover { transform: scale(1.05); }
 
-    /* Modal dialog */
+    .fab:hover {
+      transform: scale(1.05);
+    }
+
     .modal-overlay {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center;
-      padding: 20px; z-index: 50;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
     }
-    .modal-overlay.active { display: flex; }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
     .modal-card {
-      background: var(--card-bg); width: 100%; max-width: 360px;
-      border-radius: 16px; padding: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 340px;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
     }
-    .modal-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 14px; }
-    .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+
+    .modal-card h3 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
     .btn-secondary {
-      background: none; border: none; padding: 8px 14px; border-radius: 8px;
-      font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -403,34 +576,20 @@
     </div>
   </div>
 
-  <!-- Live Cloud Connection Bar -->
-  <div class="cloud-status-bar">
-    <div class="cloud-pill">
-      <span class="status-dot"></span>
-      <span>Supabase: <strong>leneusmnmwxmuyjxfqjx</strong></span>
-    </div>
-    <span class="backend-tag" id="statusBackendTag">⚡ CLOUD SYNC READY</span>
-  </div>
-
   <div class="device-frame">
     <div class="status-bar">
       <span id="statusBarClock">9:41 AM</span>
-      <span id="statusBarMode">☁️ Supabase Online</span>
+      <div class="status-indicator">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusBarMode">Supabase Cloud</span>
+      </div>
     </div>
 
-    <!-- Storage Mode Toggle -->
     <div class="mode-tab-bar">
       <button class="mode-tab active" id="tabCloud" onclick="setStorageMode('cloud')">☁️ Supabase Cloud</button>
       <button class="mode-tab" id="tabLocal" onclick="setStorageMode('local')">💾 Offline SQLite</button>
     </div>
 
-    <!-- Info Notice Box -->
-    <div class="notice-box notice-info" id="modeNoticeBox">
-      <span>ℹ️</span>
-      <span id="modeNoticeText">Connected to Supabase live database. Tasks sync automatically across devices.</span>
-    </div>
-
-    <!-- SCREEN 1: LOGIN -->
     <div id="screenLogin" class="screen active">
       <div class="auth-container">
         <div class="auth-logo">✓</div>
@@ -453,7 +612,6 @@
       </div>
     </div>
 
-    <!-- SCREEN 2: REGISTER -->
     <div id="screenRegister" class="screen">
       <div class="auth-container">
         <div class="auth-logo">👤</div>
@@ -484,7 +642,6 @@
       </div>
     </div>
 
-    <!-- SCREEN 3: TO-DO LIST -->
     <div id="screenTodoList" class="screen">
       <div class="app-header">
         <div>
@@ -492,7 +649,7 @@
           <p id="headerCounts">0 Pending • 0 Completed</p>
         </div>
         <div class="header-actions">
-          <button class="btn-sync" title="Refresh & Sync" onclick="syncCurrentTasks()">🔄</button>
+          <button class="btn-sync" title="Refresh & Sync" onclick="syncCurrentTasks()">🔄 Sync</button>
           <button class="btn-logout" onclick="handleLogout()">Log Out</button>
         </div>
       </div>
@@ -503,14 +660,11 @@
         <button class="chip" id="chipCompleted" onclick="setFilter('COMPLETED')">Completed</button>
       </div>
 
-      <div class="task-list" id="taskListContainer">
-        <!-- Tasks rendered dynamically -->
-      </div>
+      <div class="task-list" id="taskListContainer"></div>
 
       <button class="fab" onclick="openAddTaskModal()">+</button>
     </div>
 
-    <!-- ADD TASK MODAL -->
     <div class="modal-overlay" id="modalAddTask">
       <div class="modal-card">
         <h3>Add New Task</h3>
@@ -524,7 +678,7 @@
         </div>
         <div class="modal-buttons">
           <button class="btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
-          <button class="btn-primary" style="width: auto; padding: 0 18px;" onclick="handleAddTask()">Save Task</button>
+          <button class="btn-primary" style="width: auto; padding: 0 16px;" onclick="handleAddTask()">Save Task</button>
         </div>
       </div>
     </div>
@@ -532,69 +686,55 @@
   </div>
 
   <script>
-    // --- SUPABASE CONFIGURATION ---
     const SUPABASE_URL = "https://leneusmnmwxmuyjxfqjx.supabase.co";
     const SUPABASE_KEY = "sb_publishable_FBGOzmhk8Lk2xLbPQCXEkA_g0vFAs6j";
-    
+
     let supabaseClient = null;
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 
-    let storageMode = "cloud"; // "cloud" or "local"
+    let storageMode = "cloud";
     let currentFilter = "ALL";
     let cloudTasks = [];
     let cloudUser = null;
 
-    // Clock
     function updateClock() {
       const now = new Date();
-      document.getElementById('statusBarClock').textContent = 
+      document.getElementById('statusBarClock').textContent =
         now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
     setInterval(updateClock, 10000);
     updateClock();
 
-    // Mode Switcher
     function setStorageMode(mode) {
       storageMode = mode;
       document.getElementById('tabCloud').classList.toggle('active', mode === 'cloud');
       document.getElementById('tabLocal').classList.toggle('active', mode === 'local');
-      
+
       const statusBarMode = document.getElementById('statusBarMode');
-      const noticeBox = document.getElementById('modeNoticeBox');
-      const noticeText = document.getElementById('modeNoticeText');
-      const tag = document.getElementById('statusBackendTag');
+      const statusDot = document.getElementById('statusDot');
 
       if (mode === 'cloud') {
-        statusBarMode.textContent = "☁️ Supabase Cloud";
-        tag.textContent = "⚡ CLOUD SYNC READY";
-        tag.style.background = "rgba(62, 207, 142, 0.2)";
-        tag.style.color = "var(--supabase-green)";
-        noticeText.textContent = "Connected to Supabase live database. Tasks sync automatically across devices.";
-        noticeBox.className = "notice-box notice-info";
+        statusBarMode.textContent = "Supabase Cloud";
+        statusDot.style.background = "var(--supabase-green)";
+        statusDot.style.boxShadow = "0 0 6px var(--supabase-green)";
       } else {
-        statusBarMode.textContent = "💾 Local SQLite DB";
-        tag.textContent = "💾 OFFLINE LOCAL";
-        tag.style.background = "rgba(148, 163, 184, 0.2)";
-        tag.style.color = "#CBD5E1";
-        noticeText.textContent = "Operating in offline SQLite simulation with SHA-256 password hashing. Use demo@example.com / password123";
-        noticeBox.className = "notice-box notice-warning";
+        statusBarMode.textContent = "Local SQLite";
+        statusDot.style.background = "#94A3B8";
+        statusDot.style.boxShadow = "none";
       }
 
-      // If already on todolist, re-render
       if (document.getElementById('screenTodoList').classList.contains('active')) {
         renderTasks();
       }
     }
 
-    // SHA-256 Simulation for browser offline parity
     async function sha256(str) {
       const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Local Storage Database Simulation (SQLite parity)
     function getLocalDb() {
       let data = localStorage.getItem("oibsip_todo_db");
       if (!data) {
@@ -624,8 +764,6 @@
       document.getElementById(screenId).classList.add('active');
     }
 
-    // --- AUTHENTICATION ---
-
     async function handleLogin() {
       const email = document.getElementById('loginEmail').value.trim().toLowerCase();
       const pass = document.getElementById('loginPassword').value;
@@ -649,14 +787,13 @@
           if (error) {
             console.warn("Supabase Auth Error:", error);
             if (error.message && error.message.toLowerCase().includes("email not confirmed")) {
-              alert("Supabase Notice: Email not confirmed yet.\n\nTip: In your Supabase Dashboard, go to Authentication -> Providers -> Email and turn off 'Confirm email' to allow immediate login!\n\nSwitching to Offline SQLite mode so you can continue testing immediately.");
+              alert("Supabase Notice: Email not confirmed yet.\nSwitching to Offline SQLite mode so you can continue testing immediately.");
               setStorageMode('local');
               btn.textContent = "Sign In";
               btn.disabled = false;
               handleLocalLogin(email, pass);
               return;
             } else if (email === "demo@example.com") {
-              alert("Default demo account (demo@example.com) is stored in Local SQLite.\nSwitching to Offline SQLite mode.");
               setStorageMode('local');
               btn.textContent = "Sign In";
               btn.disabled = false;
@@ -676,7 +813,6 @@
           initTodoList();
         } catch (e) {
           console.error(e);
-          alert("Connection error: " + e.message + "\nSwitching to Local SQLite mode.");
           setStorageMode('local');
           btn.textContent = "Sign In";
           btn.disabled = false;
@@ -746,7 +882,7 @@
             return;
           }
 
-          alert("Account registered in Supabase Cloud!\n\nEmail: " + email + "\nNote: If 'Confirm email' is enabled in Supabase, verify your email before logging in or disable 'Confirm email' in Supabase Dashboard.");
+          alert("Account registered in Supabase Cloud!\nEmail: " + email);
           document.getElementById('loginEmail').value = email;
           document.getElementById('loginPassword').value = pass;
           switchScreen('screenLogin');
@@ -785,8 +921,6 @@
       switchScreen('screenLogin');
     }
 
-    // --- TASK MANAGEMENT ---
-
     async function initTodoList() {
       let displayName = "User";
       if (storageMode === 'cloud' && cloudUser) {
@@ -817,8 +951,7 @@
 
           if (error) {
             console.warn("Supabase Fetch Error:", error);
-            // If RLS blocks or empty, use local fallback
-            fallbackToLocalRendering();
+            renderTasks();
             return;
           }
 
@@ -826,15 +959,11 @@
           renderTasks();
         } catch (e) {
           console.warn("Failed to fetch cloud tasks:", e);
-          fallbackToLocalRendering();
+          renderTasks();
         }
       } else {
         renderTasks();
       }
-    }
-
-    function fallbackToLocalRendering() {
-      renderTasks();
     }
 
     function setFilter(filter) {
@@ -878,7 +1007,7 @@
           <div class="empty-state">
             <div class="empty-icon">✓</div>
             <div class="empty-title">No Tasks Found</div>
-            <div class="empty-msg">You're all caught up! Tap the + button below to create a new task.</div>
+            <div class="empty-msg">You're all caught up! Tap + below to add a task.</div>
           </div>
         `;
         return;
@@ -909,21 +1038,16 @@
           renderTasks();
 
           try {
-            const { error } = await supabaseClient
+            await supabaseClient
               .from('tasks')
               .update({ is_completed: newStatus })
               .eq('id', id);
-            
-            if (error) {
-              console.warn("Supabase update error (likely RLS):", error);
-            }
           } catch (e) {
             console.error("Cloud toggle error:", e);
           }
         }
       }
 
-      // Also update local DB for parity
       const db = getLocalDb();
       const localTask = db.tasks.find(t => t.id === id);
       if (localTask) {
@@ -934,21 +1058,17 @@
     }
 
     async function deleteTask(id) {
-      if (!confirm("Are you sure you want to permanently delete this task?")) return;
+      if (!confirm("Delete this task?")) return;
 
       if (storageMode === 'cloud' && supabaseClient) {
         cloudTasks = cloudTasks.filter(t => t.id !== id);
         renderTasks();
 
         try {
-          const { error } = await supabaseClient
+          await supabaseClient
             .from('tasks')
             .delete()
             .eq('id', id);
-
-          if (error) {
-            console.warn("Supabase delete error (likely RLS):", error);
-          }
         } catch (e) {
           console.error("Cloud delete error:", e);
         }
@@ -999,12 +1119,7 @@
             .insert([newTaskObj])
             .select();
 
-          if (error) {
-            console.warn("Supabase insert error:", error);
-            if (error.code === '42501') {
-              alert("Supabase Row-Level Security (RLS) Notice:\n\nThe 'tasks' table has RLS enabled. To allow public/demo task saving, run this SQL in Supabase SQL editor:\n\nCREATE POLICY \"Allow all\" ON public.tasks FOR ALL USING (true) WITH CHECK (true);\n\nSaving task locally in the meantime!");
-            }
-          } else if (data && data.length > 0) {
+          if (!error && data && data.length > 0) {
             cloudTasks.unshift(data[0]);
           }
         } catch (e) {
@@ -1012,7 +1127,6 @@
         }
       }
 
-      // Always save locally as well
       const db = getLocalDb();
       const newTask = {
         id: Date.now(),
@@ -1035,7 +1149,6 @@
       }[tag] || tag));
     }
 
-    // Auto-check on initial load
     window.addEventListener('DOMContentLoaded', () => {
       const db = getLocalDb();
       if (db.currentUser) {

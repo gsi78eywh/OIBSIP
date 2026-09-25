@@ -28,7 +28,6 @@
             android:label="@string/stopwatch_app_name"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Task 4 Quiz Application Activities -->
         <activity
             android:name="com.oibsip.quiz.QuizWelcomeActivity"
             android:exported="true"
@@ -47,7 +46,6 @@
             android:label="@string/quiz_app_name"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Task 2 To-Do App Activities -->
         <activity
             android:name="com.oibsip.todo.LoginActivity"
             android:exported="true"

@@ -2,9 +2,6 @@ package com.oibsip.unitconverter.model;
 
 import java.util.Objects;
 
-/**
- * Represents a single measurement unit belonging to a specific Category.
- */
 public class Unit {
     private final String id;
     private final String name;
@@ -36,11 +33,6 @@ public class Unit {
         return category;
     }
 
-    /**
-     * For linear categories, 1 [This Unit] = factorToBase * [Base Unit].
-     * (e.g., 1 km = 1000 m; 1 cm = 0.01 m).
-     * For Temperature, special formulas are handled in UnitConverter.
-     */
     public double getFactorToBase() {
         return factorToBase;
     }

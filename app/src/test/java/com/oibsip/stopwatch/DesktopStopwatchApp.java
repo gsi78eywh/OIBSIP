@@ -8,10 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-/**
- * Modern Desktop GUI application for TASK 5: Stopwatch & Lap Timer.
- * Provides an authentic Material-styled desktop experience runnable directly on Windows.
- */
 public class DesktopStopwatchApp extends JFrame {
 
     private final StopwatchEngine engine = new StopwatchEngine();
@@ -27,16 +23,15 @@ public class DesktopStopwatchApp extends JFrame {
     private final DefaultListModel<String> lapListModel;
     private final JLabel lblLapCount;
 
-    // Design System Colors matching Android colors.xml
-    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);       // Deep Indigo #4338CA
-    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);            // Slate 50 #F8FAFC
+    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);
+    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);
     private static final Color COLOR_CARD_BG = Color.WHITE;
-    private static final Color COLOR_BORDER = new Color(0xE2, 0xE8, 0xF0);         // Slate 200 #E2E8F0
-    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);      // Slate 900 #0F172A
-    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);     // Slate 500 #64748B
-    private static final Color COLOR_START = new Color(0x10, 0xB9, 0x81);          // Emerald 500 #10B981
-    private static final Color COLOR_PAUSE = new Color(0xF5, 0x9E, 0x0B);          // Amber 500 #F59E0B
-    private static final Color COLOR_RESET = new Color(0xEF, 0x44, 0x44);          // Red 500 #EF4444
+    private static final Color COLOR_BORDER = new Color(0xE2, 0xE8, 0xF0);
+    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);
+    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);
+    private static final Color COLOR_START = new Color(0x10, 0xB9, 0x81);
+    private static final Color COLOR_PAUSE = new Color(0xF5, 0x9E, 0x0B);
+    private static final Color COLOR_RESET = new Color(0xEF, 0x44, 0x44);
 
     public DesktopStopwatchApp() {
         super("OIBSIP · Task 5: Stopwatch & Lap Timer");
@@ -47,7 +42,6 @@ public class DesktopStopwatchApp extends JFrame {
         getContentPane().setBackground(COLOR_BG);
         setLayout(new BorderLayout());
 
-        // 1. Header Panel
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(COLOR_CARD_BG);
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -70,13 +64,11 @@ public class DesktopStopwatchApp extends JFrame {
         headerPanel.add(titleBox, BorderLayout.CENTER);
         add(headerPanel, BorderLayout.NORTH);
 
-        // 2. Center Panel (Display + Buttons + Lap List)
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(COLOR_BG);
         centerPanel.setBorder(new EmptyBorder(20, 24, 24, 24));
 
-        // Time Card
         JPanel timeCard = new JPanel();
         timeCard.setLayout(new BoxLayout(timeCard, BoxLayout.Y_AXIS));
         timeCard.setBackground(COLOR_CARD_BG);
@@ -110,7 +102,6 @@ public class DesktopStopwatchApp extends JFrame {
         centerPanel.add(timeCard);
         centerPanel.add(Box.createVerticalStrut(16));
 
-        // 3. Action Buttons Row
         JPanel btnPanel = new JPanel(new GridLayout(1, 4, 8, 0));
         btnPanel.setOpaque(false);
         btnPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
@@ -127,7 +118,6 @@ public class DesktopStopwatchApp extends JFrame {
         centerPanel.add(btnPanel);
         centerPanel.add(Box.createVerticalStrut(20));
 
-        // 4. Lap History Section
         JPanel lapHeader = new JPanel(new BorderLayout());
         lapHeader.setOpaque(false);
         JLabel lblLapTitle = new JLabel("LAP HISTORY");
@@ -157,7 +147,6 @@ public class DesktopStopwatchApp extends JFrame {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // Timer Loop (~30ms for 33 FPS smooth refresh)
         timer = new Timer(30, e -> updateClock());
 
         setupListeners();

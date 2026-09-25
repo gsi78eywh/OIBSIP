@@ -14,7 +14,6 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Top Header -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +35,6 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="20dp" />
 
-        <!-- Main Score Hero Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,7 +52,6 @@
                 android:gravity="center_horizontal"
                 android:padding="28dp">
 
-                <!-- Trophy Icon -->
                 <ImageView
                     android:id="@+id/ivResultIcon"
                     android:layout_width="72dp"
@@ -63,7 +60,6 @@
                     android:layout_marginBottom="16dp"
                     android:contentDescription="Result Trophy" />
 
-                <!-- Percentage -->
                 <TextView
                     android:id="@+id/tvScorePercentage"
                     android:layout_width="wrap_content"
@@ -74,7 +70,6 @@
                     android:textColor="@color/primary"
                     android:layout_marginBottom="6dp" />
 
-                <!-- Grade Title -->
                 <TextView
                     android:id="@+id/tvGradeTitle"
                     android:layout_width="wrap_content"
@@ -85,7 +80,6 @@
                     android:textColor="@color/text_primary"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Feedback Message -->
                 <TextView
                     android:id="@+id/tvFeedbackMessage"
                     android:layout_width="match_parent"
@@ -97,7 +91,6 @@
                     android:lineSpacingMultiplier="1.2"
                     android:layout_marginBottom="16dp" />
 
-                <!-- New High Score Banner (Gone by default) -->
                 <TextView
                     android:id="@+id/tvNewHighScoreBadge"
                     android:layout_width="wrap_content"
@@ -116,14 +109,12 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Stats Breakdown Row (Correct, Incorrect, Total) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="24dp">
 
-            <!-- Correct Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -161,7 +152,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Wrong Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -200,7 +190,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Total Questions Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -238,7 +227,6 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Restart Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRestartQuiz"
             android:layout_width="match_parent"
@@ -251,7 +239,6 @@
             android:textColor="@color/on_primary"
             android:layout_marginBottom="12dp" />
 
-        <!-- Home Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBackToMenu"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"

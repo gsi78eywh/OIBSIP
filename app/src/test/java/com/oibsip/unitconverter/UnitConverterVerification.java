@@ -8,11 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Standalone, zero-dependency verification runner that validates all conversion calculations,
- * category and unit models, physical limits, formatting, and edge cases.
- * Can be executed anywhere directly on standard Java without needing JUnit.
- */
 public class UnitConverterVerification {
 
     private static int testsPassed = 0;
@@ -185,20 +180,17 @@ public class UnitConverterVerification {
         Unit f = findUnit(Category.TEMPERATURE, "temp_f");
         Unit k = findUnit(Category.TEMPERATURE, "temp_k");
 
-        // C <-> F
         assertEquals("0 °C to °F", 32.0, UnitConverter.convert(0.0, c, f), DELTA);
         assertEquals("100 °C to °F", 212.0, UnitConverter.convert(100.0, c, f), DELTA);
         assertEquals("-40 °C to °F", -40.0, UnitConverter.convert(-40.0, c, f), DELTA);
         assertEquals("32 °F to °C", 0.0, UnitConverter.convert(32.0, f, c), DELTA);
         assertEquals("212 °F to °C", 100.0, UnitConverter.convert(212.0, f, c), DELTA);
 
-        // C <-> K
         assertEquals("0 °C to K", 273.15, UnitConverter.convert(0.0, c, k), DELTA);
         assertEquals("-273.15 °C to K", 0.0, UnitConverter.convert(-273.15, c, k), DELTA);
         assertEquals("273.15 K to °C", 0.0, UnitConverter.convert(273.15, k, c), DELTA);
         assertEquals("0 K to °C", -273.15, UnitConverter.convert(0.0, k, c), DELTA);
 
-        // F <-> K
         assertEquals("32 °F to K", 273.15, UnitConverter.convert(32.0, f, k), DELTA);
         assertEquals("273.15 K to °F", 32.0, UnitConverter.convert(273.15, k, f), DELTA);
         assertEquals("-459.67 °F to K", 0.0, UnitConverter.convert(-459.67, f, k), DELTA);

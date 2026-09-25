@@ -12,11 +12,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemEvent;
 import java.util.List;
 
-/**
- * Modern Desktop GUI application for the OIBSIP Unit Converter.
- * Provides a pixel-aligned Material Design desktop interface allowing users to run
- * and interact with the application directly on Windows without an Android emulator.
- */
 public class DesktopUnitConverterApp extends JFrame {
 
     private final JComboBox<Category> cbCategory;
@@ -29,17 +24,16 @@ public class DesktopUnitConverterApp extends JFrame {
     private final JButton btnCopy;
     private String lastResultFormatted = "";
 
-    // Design System Colors matching Android colors.xml
-    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);       // Deep Indigo #4338CA
-    private static final Color COLOR_PRIMARY_DARK = new Color(0x37, 0x30, 0xA3);  // Dark Indigo #3730A3
-    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);            // Slate 50 #F8FAFC
+    private static final Color COLOR_PRIMARY = new Color(0x43, 0x38, 0xCA);
+    private static final Color COLOR_PRIMARY_DARK = new Color(0x37, 0x30, 0xA3);
+    private static final Color COLOR_BG = new Color(0xF8, 0xFA, 0xFC);
     private static final Color COLOR_CARD_BG = Color.WHITE;
-    private static final Color COLOR_BORDER = new Color(0xCB, 0xD5, 0xE1);         // Slate 300 #CBD5E1
-    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);      // Slate 900 #0F172A
-    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);     // Slate 500 #64748B
-    private static final Color COLOR_SUCCESS_BG = new Color(0xF0, 0xFD, 0xF4);     // Green 50 #F0FDF4
-    private static final Color COLOR_SUCCESS_BORDER = new Color(0xBB, 0xF7, 0xD0); // Green 200 #BBF7D0
-    private static final Color COLOR_SUCCESS_TEXT = new Color(0x15, 0x80, 0x3D);   // Green 700 #15803D
+    private static final Color COLOR_BORDER = new Color(0xCB, 0xD5, 0xE1);
+    private static final Color COLOR_TEXT_MAIN = new Color(0x0F, 0x17, 0x2A);
+    private static final Color COLOR_TEXT_MUTED = new Color(0x64, 0x74, 0x8B);
+    private static final Color COLOR_SUCCESS_BG = new Color(0xF0, 0xFD, 0xF4);
+    private static final Color COLOR_SUCCESS_BORDER = new Color(0xBB, 0xF7, 0xD0);
+    private static final Color COLOR_SUCCESS_TEXT = new Color(0x15, 0x80, 0x3D);
 
     public DesktopUnitConverterApp() {
         super("OIBSIP · Unit Converter Application");
@@ -50,17 +44,14 @@ public class DesktopUnitConverterApp extends JFrame {
         getContentPane().setBackground(COLOR_BG);
         setLayout(new BorderLayout());
 
-        // Header Panel
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
 
-        // Center Content (Cards inside ScrollPane)
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(COLOR_BG);
         contentPanel.setBorder(new EmptyBorder(16, 20, 20, 20));
 
-        // 1. Category Card
         JPanel categoryCard = createCardPanel();
         categoryCard.setLayout(new BorderLayout(8, 8));
         JLabel lblCatTitle = new JLabel("MEASUREMENT CATEGORY");
@@ -74,7 +65,6 @@ public class DesktopUnitConverterApp extends JFrame {
         contentPanel.add(categoryCard);
         contentPanel.add(Box.createVerticalStrut(16));
 
-        // 2. Conversion Input & Unit Selection Card
         JPanel inputCard = createCardPanel();
         inputCard.setLayout(new BoxLayout(inputCard, BoxLayout.Y_AXIS));
 
@@ -96,7 +86,6 @@ public class DesktopUnitConverterApp extends JFrame {
         inputCard.add(txtInput);
         inputCard.add(Box.createVerticalStrut(16));
 
-        // From Unit
         JLabel lblFrom = new JLabel("FROM");
         lblFrom.setFont(new Font("Segoe UI", Font.BOLD, 11));
         lblFrom.setForeground(COLOR_TEXT_MUTED);
@@ -110,7 +99,6 @@ public class DesktopUnitConverterApp extends JFrame {
         inputCard.add(cbFromUnit);
         inputCard.add(Box.createVerticalStrut(10));
 
-        // Swap Button
         JButton btnSwap = new JButton("⇅  Swap Units");
         btnSwap.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnSwap.setForeground(COLOR_PRIMARY);
@@ -124,7 +112,6 @@ public class DesktopUnitConverterApp extends JFrame {
         inputCard.add(btnSwap);
         inputCard.add(Box.createVerticalStrut(10));
 
-        // To Unit
         JLabel lblTo = new JLabel("TO");
         lblTo.setFont(new Font("Segoe UI", Font.BOLD, 11));
         lblTo.setForeground(COLOR_TEXT_MUTED);
@@ -138,7 +125,6 @@ public class DesktopUnitConverterApp extends JFrame {
         inputCard.add(cbToUnit);
         inputCard.add(Box.createVerticalStrut(20));
 
-        // Action Buttons: Convert & Reset
         JPanel buttonRow = new JPanel(new GridLayout(1, 2, 12, 0));
         buttonRow.setBackground(COLOR_CARD_BG);
         buttonRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
@@ -169,7 +155,6 @@ public class DesktopUnitConverterApp extends JFrame {
         contentPanel.add(inputCard);
         contentPanel.add(Box.createVerticalStrut(16));
 
-        // 3. Result Card
         JPanel resultCard = createCardPanel();
         resultCard.setBackground(COLOR_SUCCESS_BG);
         resultCard.setBorder(BorderFactory.createCompoundBorder(
@@ -227,14 +212,12 @@ public class DesktopUnitConverterApp extends JFrame {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Setup Category change listener
         cbCategory.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 updateUnitDropdowns((Category) cbCategory.getSelectedItem());
             }
         });
 
-        // Initialize with default category
         updateUnitDropdowns((Category) cbCategory.getSelectedItem());
         performConversion();
     }

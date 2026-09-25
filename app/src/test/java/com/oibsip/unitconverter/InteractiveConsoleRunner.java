@@ -7,35 +7,40 @@ import com.oibsip.unitconverter.model.Unit;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Lightweight, easy-to-read console runner for the Unit Converter.
- * Supports both an interactive terminal menu and direct command-line arguments.
- */
 public class InteractiveConsoleRunner {
 
-    public static void main(String[] args) {
-        System.out.println("=========================================================");
-        System.out.println("   OIBSIP Task 1 - Unit Converter Application (CLI)      ");
-        System.out.println("=========================================================");
+    public static void clearScreen() {
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception ignored) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+        }
+    }
 
-        // Mode 1: Quick CLI conversion (e.g., "100 m cm" or "0 °C °F")
+    public static void main(String[] args) {
         if (args.length == 3) {
             handleDirectConversion(args[0], args[1], args[2]);
             return;
         }
 
-        // Mode 2: Interactive Menu
         runInteractiveMenu();
     }
 
-    /**
-     * Interactive terminal menu loop.
-     */
     private static void runInteractiveMenu() {
         Scanner scanner = new Scanner(System.in);
         Category[] categories = Category.values();
 
         while (true) {
+            clearScreen();
+            System.out.println("=========================================================");
+            System.out.println("   OIBSIP Task 1 - Unit Converter Application (CLI)      ");
+            System.out.println("=========================================================");
             System.out.println("\n--- Select Measurement Category ---");
             for (int i = 0; i < categories.length; i++) {
                 System.out.printf("  [%d] %s (%s)%n", i + 1, categories[i].getDisplayName(), categories[i].getDescription());
@@ -53,18 +58,23 @@ public class InteractiveConsoleRunner {
             int catIdx = parseIndex(input, categories.length);
             if (catIdx == -1) {
                 System.out.println("Invalid category choice. Please try again.");
+                pause(scanner);
                 continue;
             }
 
             Category selectedCategory = categories[catIdx];
             List<Unit> units = UnitConverter.getUnitsForCategory(selectedCategory);
 
+            clearScreen();
+            System.out.println("=========================================================");
+            System.out.println("   " + selectedCategory.getDisplayName() + " Converter");
+            System.out.println("=========================================================");
             System.out.println("\nAvailable Units for " + selectedCategory.getDisplayName() + ":");
             for (int i = 0; i < units.size(); i++) {
                 System.out.printf("  [%d] %s%n", i + 1, units.get(i).getDisplayLabel());
             }
 
-            System.out.print("Select From Unit: ");
+            System.out.print("\nSelect From Unit: ");
             if (!scanner.hasNextLine()) break;
             int fromIdx = parseIndex(scanner.nextLine(), units.size());
 
@@ -74,6 +84,7 @@ public class InteractiveConsoleRunner {
 
             if (fromIdx == -1 || toIdx == -1) {
                 System.out.println("Invalid unit selection. Please try again.");
+                pause(scanner);
                 continue;
             }
 
@@ -81,13 +92,21 @@ public class InteractiveConsoleRunner {
             if (!scanner.hasNextLine()) break;
             String valStr = scanner.nextLine().trim();
 
+            System.out.println("\n---------------------------------------------------------");
             handleDirectConversion(valStr, units.get(fromIdx).getId(), units.get(toIdx).getId());
+            System.out.println("---------------------------------------------------------");
+
+            pause(scanner);
         }
     }
 
-    /**
-     * Executes conversion between two units, validates limits, and prints results.
-     */
+    private static void pause(Scanner scanner) {
+        System.out.print("\nPress Enter to return to menu...");
+        if (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
+    }
+
     public static void handleDirectConversion(String valStr, String fromStr, String toStr) {
         try {
             double val = Double.parseDouble(valStr);
@@ -126,9 +145,6 @@ public class InteractiveConsoleRunner {
         }
     }
 
-    /**
-     * Finds a Unit matching by ID, symbol, or name (case-insensitive).
-     */
     private static Unit findUnit(String search) {
         if (search == null || search.trim().isEmpty()) return null;
         for (Category category : Category.values()) {
@@ -143,9 +159,6 @@ public class InteractiveConsoleRunner {
         return null;
     }
 
-    /**
-     * Safely parses user 1-based index input into a 0-based integer.
-     */
     private static int parseIndex(String text, int max) {
         try {
             int index = Integer.parseInt(text.trim()) - 1;

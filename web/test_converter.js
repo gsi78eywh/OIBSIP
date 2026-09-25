@@ -1,10 +1,6 @@
-// Automated Test Suite for Web Simulator (web/index.html)
-// Ensures 100% calculation parity between JavaScript web engine and Java engine.
-
 const fs = require('fs');
 const path = require('path');
 
-// Read web/index.html and extract the script content
 const htmlContent = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 const scriptMatch = htmlContent.match(/<script>([\s\S]*?)<\/script>/);
 
@@ -13,10 +9,8 @@ if (!scriptMatch) {
   process.exit(1);
 }
 
-// Sandbox execution of mathematical functions
 const scriptBody = scriptMatch[1];
 
-// Extract CATEGORIES and helper functions without triggering DOM references
 const sandboxContext = {};
 const fnCode = `
   ${scriptBody.substring(0, scriptBody.indexOf('// DOM Elements'))}
@@ -71,7 +65,6 @@ console.log("=========================================================");
 console.log("   OIBSIP Unit Converter - Web Engine Parity Tests       ");
 console.log("=========================================================");
 
-// 1. Categories and Units count
 console.log("\n1. Testing Category & Unit Registries:");
 const catKeys = Object.keys(CATEGORIES);
 assertEqual("6 Categories Registered", catKeys.length, 6);
@@ -82,7 +75,6 @@ catKeys.forEach(k => {
 });
 assertEqual("32 Units Registered", totalUnits, 32);
 
-// 2. Length Tests
 console.log("\n2. Testing Length Conversions:");
 const lenUnits = CATEGORIES.LENGTH.units;
 const m = lenUnits.find(u => u.id === 'len_m');
@@ -93,7 +85,6 @@ assertClose("100 cm to m", convertUnits(100, cm, m, "LENGTH"), 1.0);
 assertClose("1 km to m", convertUnits(1, km, m, "LENGTH"), 1000.0);
 assertClose("1 mi to m", convertUnits(1, mi, m, "LENGTH"), 1609.344);
 
-// 3. Weight Tests
 console.log("\n3. Testing Weight Conversions:");
 const wtUnits = CATEGORIES.WEIGHT.units;
 const kg = wtUnits.find(u => u.id === 'wt_kg');
@@ -102,7 +93,6 @@ const lb = wtUnits.find(u => u.id === 'wt_lb');
 assertClose("1 kg to g", convertUnits(1, kg, g, "WEIGHT"), 1000.0);
 assertClose("1 lb to kg", convertUnits(1, lb, kg, "WEIGHT"), 0.45359237);
 
-// 4. Temperature Matrix
 console.log("\n4. Testing Temperature Conversions:");
 const tempUnits = CATEGORIES.TEMPERATURE.units;
 const c = tempUnits.find(u => u.id === 'temp_c');
@@ -115,7 +105,6 @@ assertClose("0 °C to K", convertUnits(0, c, k, "TEMPERATURE"), 273.15);
 assertClose("273.15 K to °C", convertUnits(273.15, k, c, "TEMPERATURE"), 0.0);
 assertClose("32 °F to K", convertUnits(32, f, k, "TEMPERATURE"), 273.15);
 
-// 5. Absolute Zero Check
 console.log("\n5. Testing Absolute Zero Limits:");
 assertTrue("-273.16 °C is below abs zero", isBelowAbsoluteZero(-273.16, "temp_c", "TEMPERATURE"));
 assertTrue("-273.15 °C is valid", !isBelowAbsoluteZero(-273.15, "temp_c", "TEMPERATURE"));
@@ -124,7 +113,6 @@ assertTrue("0 K is valid", !isBelowAbsoluteZero(0, "temp_k", "TEMPERATURE"));
 assertTrue("-460 °F is below abs zero", isBelowAbsoluteZero(-460, "temp_f", "TEMPERATURE"));
 assertTrue("-459.67 °F is valid", !isBelowAbsoluteZero(-459.67, "temp_f", "TEMPERATURE"));
 
-// 6. Formatting & Formulas
 console.log("\n6. Testing Formatting and Formulas:");
 assertEqual("Format integer 100", formatNumber(100), "100");
 assertEqual("Format integer 0", formatNumber(0), "0");

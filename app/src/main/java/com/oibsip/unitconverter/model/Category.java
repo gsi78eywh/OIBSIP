@@ -1,8 +1,5 @@
 package com.oibsip.unitconverter.model;
 
-/**
- * Represents the measurement categories supported by the Unit Converter application.
- */
 public enum Category {
     LENGTH("Length", "Distance & dimensions"),
     WEIGHT("Weight / Mass", "Mass & weight measurements"),

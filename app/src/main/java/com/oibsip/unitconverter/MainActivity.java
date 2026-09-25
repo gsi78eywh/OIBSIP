@@ -24,40 +24,25 @@ import com.oibsip.unitconverter.model.Unit;
 
 import java.util.List;
 
-/**
- * MainActivity for the OIBSIP Unit Converter application.
- * 
- * Responsibilities:
- * 1. Initialize and bind UI widgets from XML layout.
- * 2. Populate Category and Unit dropdown spinners.
- * 3. Validate user input (empty text, non-numeric, below absolute zero).
- * 4. Execute conversion calculation via UnitConverter and display results.
- * 5. Provide utility actions: Swap units, Reset form, and Copy result.
- */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "UnitConverterApp";
 
-    // Dropdown Spinners
     private Spinner spinnerCategory;
     private Spinner spinnerFromUnit;
     private Spinner spinnerToUnit;
 
-    // Input Field
     private TextInputEditText etValueInput;
 
-    // Action Buttons
     private MaterialButton btnConvert;
     private MaterialButton btnSwapUnits;
     private MaterialButton btnReset;
     private MaterialButton btnCopyResult;
 
-    // Result Display Labels
     private TextView tvResultValue;
     private TextView tvResultUnit;
     private TextView tvResultFormula;
 
-    // Stores formatted text for clipboard copying (e.g., "100 cm")
     private String lastResult = "";
 
     @Override
@@ -86,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
         tvResultFormula = findViewById(R.id.tvResultFormula);
     }
 
-    /**
-     * Fills the category dropdown with all available measurement categories
-     * (Length, Weight, Temperature, Volume, Speed, Time).
-     */
     private void setupCategorySpinner() {
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                 this,
@@ -99,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerCategory.setAdapter(adapter);
 
-        // When user picks a category, populate the source and target unit dropdowns
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -113,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Populates both the "From Unit" and "To Unit" dropdowns based on the chosen category.
-     */
     private void updateUnitSpinners(Category category) {
         List<Unit> units = UnitConverter.getUnitsForCategory(category);
 
@@ -129,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerFromUnit.setAdapter(unitAdapter);
         spinnerToUnit.setAdapter(unitAdapter);
 
-        // Set default selections (From = 1st unit, To = 2nd unit)
         if (units.size() > 1) {
             spinnerFromUnit.setSelection(0);
             spinnerToUnit.setSelection(1);
@@ -138,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
         resetResult();
     }
 
-    /**
-     * Attaches click listeners to interactive action buttons.
-     */
     private void setupButtons() {
         btnConvert.setOnClickListener(v -> performConversion());
         btnSwapUnits.setOnClickListener(v -> swapUnits());
@@ -181,14 +154,12 @@ public class MainActivity extends AppCompatActivity {
         String rawInput = etValueInput.getText() != null ? etValueInput.getText().toString().trim() : "";
         Log.d(TAG, "Attempting conversion with input: '" + rawInput + "'");
 
-        // 1. Validation: Empty field
         if (rawInput.isEmpty()) {
             Log.w(TAG, "Validation failed: Input field is empty");
             showToast("Please enter a numeric value to convert");
             return;
         }
 
-        // 2. Validation: Valid number format
         double value;
         try {
             value = Double.parseDouble(rawInput);
@@ -204,14 +175,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 3. Validation: Temperature absolute zero limit
         if (UnitConverter.isBelowAbsoluteZero(value, fromUnit)) {
             Log.w(TAG, "Validation failed: Temperature below Absolute Zero (" + value + " " + fromUnit.getSymbol() + ")");
             showToast("Invalid: Temperature cannot be below Absolute Zero");
             return;
         }
 
-        // 4. Perform calculation
         Log.d(TAG, "Converting: " + value + " " + fromUnit.getName() + " -> " + toUnit.getName());
         double result = UnitConverter.convert(value, fromUnit, toUnit);
         String formattedResult = UnitConverter.formatResult(result);
@@ -220,16 +189,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Conversion successful: " + formattedResult + " " + toUnit.getSymbol());
         Log.d(TAG, "Formula: " + formulaExplanation);
 
-        // 5. Update UI with results
         tvResultValue.setText(formattedResult);
         tvResultUnit.setText(toUnit.getSymbol());
         tvResultFormula.setText(formulaExplanation);
         lastResult = formattedResult + " " + toUnit.getSymbol();
     }
 
-    /**
-     * Swaps the selected source unit and target unit, and recalculates if value exists.
-     */
     private void swapUnits() {
         int fromPos = spinnerFromUnit.getSelectedItemPosition();
         int toPos   = spinnerToUnit.getSelectedItemPosition();
@@ -240,25 +205,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Swapped unit positions: " + fromPos + " <-> " + toPos);
             showToast("Units swapped");
 
-            // Recalculate immediately if an input value is already entered
             if (etValueInput.getText() != null && !etValueInput.getText().toString().trim().isEmpty()) {
                 performConversion();
             }
         }
     }
 
-    /**
-     * Clears input field and resets results card to initial blank state.
-     */
     private void resetForm() {
         etValueInput.setText("");
         resetResult();
         showToast("Form reset");
     }
 
-    /**
-     * Resets result card display text to placeholder state.
-     */
     private void resetResult() {
         tvResultValue.setText("---");
         tvResultUnit.setText("");
@@ -266,9 +224,6 @@ public class MainActivity extends AppCompatActivity {
         lastResult = "";
     }
 
-    /**
-     * Copies the latest converted result to Android's system clipboard.
-     */
     private void copyResultToClipboard() {
         if (lastResult.isEmpty()) {
             showToast("No result to copy");

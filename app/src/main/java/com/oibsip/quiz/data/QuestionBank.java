@@ -7,16 +7,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Question Bank containing curated questions for the Quiz Application.
- * Topics: Computer Science, Programming, and Technology Fundamentals.
- */
 public class QuestionBank {
 
     private static final List<Question> ALL_QUESTIONS = new ArrayList<>();
 
     static {
-        // Question 1
+
         ALL_QUESTIONS.add(new Question(
                 1,
                 "What does CPU stand for in computer systems?",
@@ -32,7 +28,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 2
         ALL_QUESTIONS.add(new Question(
                 2,
                 "Which data structure operates on a Last-In, First-Out (LIFO) principle?",
@@ -48,7 +43,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 3
         ALL_QUESTIONS.add(new Question(
                 3,
                 "Who is widely recognized as the father of modern Computer Science?",
@@ -64,7 +58,6 @@ public class QuestionBank {
                 "Medium"
         ));
 
-        // Question 4
         ALL_QUESTIONS.add(new Question(
                 4,
                 "Which programming language was developed by James Gosling at Sun Microsystems in 1995?",
@@ -80,7 +73,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 5
         ALL_QUESTIONS.add(new Question(
                 5,
                 "What is the time complexity of searching for an element in a balanced Binary Search Tree (BST)?",
@@ -96,7 +88,6 @@ public class QuestionBank {
                 "Medium"
         ));
 
-        // Question 6
         ALL_QUESTIONS.add(new Question(
                 6,
                 "What protocol is used to securely encrypt web traffic between browser and server?",
@@ -112,7 +103,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 7
         ALL_QUESTIONS.add(new Question(
                 7,
                 "In Object-Oriented Programming, what concept allows a subclass to provide a specific implementation of a method defined in its parent class?",
@@ -128,7 +118,6 @@ public class QuestionBank {
                 "Medium"
         ));
 
-        // Question 8
         ALL_QUESTIONS.add(new Question(
                 8,
                 "What does SQL stand for in database management?",
@@ -144,7 +133,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 9
         ALL_QUESTIONS.add(new Question(
                 9,
                 "Which type of primary computer memory is volatile and loses its data when powered off?",
@@ -160,7 +148,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 10
         ALL_QUESTIONS.add(new Question(
                 10,
                 "What does an IP address stand for in computer networking?",
@@ -176,7 +163,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 11
         ALL_QUESTIONS.add(new Question(
                 11,
                 "In Git version control, which command is used to record local changes to the repository with a message?",
@@ -192,7 +178,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 12
         ALL_QUESTIONS.add(new Question(
                 12,
                 "Which of the following is NOT an Operating System?",
@@ -208,7 +193,6 @@ public class QuestionBank {
                 "Easy"
         ));
 
-        // Question 13
         ALL_QUESTIONS.add(new Question(
                 13,
                 "What is the primary purpose of the Android Manifest (AndroidManifest.xml) file?",
@@ -224,7 +208,6 @@ public class QuestionBank {
                 "Medium"
         ));
 
-        // Question 14
         ALL_QUESTIONS.add(new Question(
                 14,
                 "In binary representation, what decimal number does the 8-bit byte 00001010 represent?",
@@ -240,7 +223,6 @@ public class QuestionBank {
                 "Medium"
         ));
 
-        // Question 15
         ALL_QUESTIONS.add(new Question(
                 15,
                 "Which sorting algorithm has an average and worst-case time complexity of O(n log n)?",
@@ -257,27 +239,14 @@ public class QuestionBank {
         ));
     }
 
-    /**
-     * Returns an unmodifiable list of all registered questions in original order.
-     */
     public static List<Question> getAllQuestions() {
         return Collections.unmodifiableList(ALL_QUESTIONS);
     }
 
-    /**
-     * Total number of questions available in the bank.
-     */
     public static int getBankSize() {
         return ALL_QUESTIONS.size();
     }
 
-    /**
-     * Returns a randomized subset of questions with shuffled options.
-     *
-     * @param count Number of questions to retrieve (capped at total available)
-     * @param shuffleOptions Whether to randomize the 4 options inside each question
-     * @return List of prepared Question objects
-     */
     public static List<Question> getShuffledQuestions(int count, boolean shuffleOptions) {
         List<Question> pool = new ArrayList<>(ALL_QUESTIONS);
         Collections.shuffle(pool);

@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Top Status Bar: Question Counter & Live Score -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
                 android:paddingBottom="4dp" />
         </LinearLayout>
 
-        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBarQuiz"
             style="?android:attr/progressBarStyleHorizontal"
@@ -58,7 +56,6 @@
             android:progressBackgroundTint="@color/card_stroke"
             android:layout_marginBottom="16dp" />
 
-        <!-- Category & Difficulty Chip -->
         <TextView
             android:id="@+id/tvCategoryDifficulty"
             android:layout_width="wrap_content"
@@ -71,7 +68,6 @@
             android:textAllCaps="true"
             android:layout_marginBottom="8dp" />
 
-        <!-- Question Prompt Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,14 +96,12 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 4 Option Cards -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginBottom="16dp">
 
-            <!-- Option 0 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardOption0"
                 android:layout_width="match_parent"
@@ -158,7 +152,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option 1 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardOption1"
                 android:layout_width="match_parent"
@@ -209,7 +202,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option 2 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardOption2"
                 android:layout_width="match_parent"
@@ -260,7 +252,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Option 3 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardOption3"
                 android:layout_width="match_parent"
@@ -312,7 +303,6 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Explanation Card (Shown after selection) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardExplanation"
             android:layout_width="match_parent"
@@ -352,7 +342,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Next / Finish Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNextQuestion"
             android:layout_width="match_parent"

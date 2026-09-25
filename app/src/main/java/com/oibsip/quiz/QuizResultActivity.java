@@ -15,15 +15,6 @@ import com.oibsip.unitconverter.R;
 
 import java.util.Locale;
 
-/**
- * Result & Score Summary Screen for TASK 4: Quiz Application.
- * 
- * Responsibilities:
- * 1. Display total score, accuracy percentage, and qualitative feedback grade.
- * 2. Show detailed breakdown (number correct, number incorrect, total).
- * 3. Update and celebrate new high score records in SharedPreferences.
- * 4. Offer "Restart Quiz" (immediate replay with fresh shuffle) and "Back to Menu".
- */
 public class QuizResultActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizResultActivity";
@@ -90,9 +81,6 @@ public class QuizResultActivity extends AppCompatActivity {
         checkAndSaveHighScore((int) Math.round(percentage));
     }
 
-    /**
-     * Checks if current score beats previous best and saves to SharedPreferences.
-     */
     private void checkAndSaveHighScore(int currentPercentage) {
         SharedPreferences prefs = getSharedPreferences(QuizWelcomeActivity.PREFS_NAME, Context.MODE_PRIVATE);
         int previousHigh = prefs.getInt(QuizWelcomeActivity.KEY_HIGH_SCORE, -1);

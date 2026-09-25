@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +70,6 @@
                         app:tint="@color/text_secondary" />
                 </RelativeLayout>
 
-                <!-- Filter Toggle Group -->
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/toggleGroupFilter"
                     android:layout_width="match_parent"
@@ -115,7 +113,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Main Task List Container -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -127,7 +124,6 @@
                 android:clipToPadding="false"
                 android:padding="16dp" />
 
-            <!-- Empty State View -->
             <LinearLayout
                 android:id="@+id/layoutEmptyState"
                 android:layout_width="match_parent"
@@ -175,7 +171,6 @@
 
     </LinearLayout>
 
-    <!-- Floating Action Button: Add Task -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTask"
         android:layout_width="wrap_content"

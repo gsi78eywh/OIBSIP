@@ -7,10 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Core logic engine for the stopwatch.
- * Handles timing calculations, state transitions, and lap tracking.
- */
 public class StopwatchEngine {
 
     public enum State {

@@ -84,7 +84,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 tvNotes.setVisibility(View.GONE);
             }
 
-            // Remove listener before setting checked state to avoid accidental trigger
             cbCompleted.setOnCheckedChangeListener(null);
             cbCompleted.setChecked(task.isCompleted());
 

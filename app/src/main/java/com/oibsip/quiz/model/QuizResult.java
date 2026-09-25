@@ -3,9 +3,6 @@ package com.oibsip.quiz.model;
 import java.io.Serializable;
 import java.util.Locale;
 
-/**
- * Encapsulates the overall outcome of a completed quiz session.
- */
 public class QuizResult implements Serializable {
 
     private final int totalQuestions;

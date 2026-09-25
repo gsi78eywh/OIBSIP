@@ -16,15 +16,6 @@ import com.oibsip.stopwatch.StopwatchActivity;
 
 import java.util.Locale;
 
-/**
- * Welcome / Start screen for TASK 4: Quiz Application.
- * 
- * Responsibilities:
- * 1. Introduce quiz topic, format, and rules.
- * 2. Display persistent high score from SharedPreferences.
- * 3. Launch QuizActivity on "Start Quiz" click.
- * 4. Provide fast switching between other internship tasks (Stopwatch & Converter).
- */
 public class QuizWelcomeActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizWelcomeActivity";
@@ -50,7 +41,7 @@ public class QuizWelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh high score in case a new one was achieved in QuizResultActivity
+
         loadHighScore();
     }
 

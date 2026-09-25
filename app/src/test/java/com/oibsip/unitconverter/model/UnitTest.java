@@ -8,9 +8,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Unit tests for the Unit data model, display label formatting, and equality contracts.
- */
 public class UnitTest {
 
     @Test
@@ -50,22 +47,17 @@ public class UnitTest {
         Unit unit1Duplicate = new Unit("len_m", "Metre", "m", Category.LENGTH, 1.0);
         Unit unit2 = new Unit("len_cm", "Centimeter", "cm", Category.LENGTH, 0.01);
 
-        // Reflexivity
         assertTrue("An object must equal itself", unit1.equals(unit1));
 
-        // Symmetry & Equality based on ID
         assertTrue("Units with identical IDs should be equal", unit1.equals(unit1Duplicate));
         assertTrue("Equality must be symmetric", unit1Duplicate.equals(unit1));
         assertEquals("Equal units must have equal hash codes", unit1.hashCode(), unit1Duplicate.hashCode());
 
-        // Inequality
         assertFalse("Units with different IDs should not be equal", unit1.equals(unit2));
         assertNotEquals("Different units usually have different hash codes", unit1.hashCode(), unit2.hashCode());
 
-        // Null comparison
         assertFalse("An object must not equal null", unit1.equals(null));
 
-        // Type comparison
         assertFalse("An object must not equal an object of different type", unit1.equals("len_m"));
     }
 }

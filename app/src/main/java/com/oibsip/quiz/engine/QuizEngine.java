@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Manages quiz session state, answer verification, and scoring.
- */
 public class QuizEngine {
 
     public enum State {

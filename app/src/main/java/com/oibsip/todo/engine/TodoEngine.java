@@ -39,7 +39,7 @@ public class TodoEngine {
 
         String normalizedEmail = email.trim().toLowerCase();
         if (isEmailRegistered(normalizedEmail)) {
-            return null; // Already exists
+            return null;
         }
 
         long id = userIdSequence.getAndIncrement();
@@ -99,7 +99,6 @@ public class TodoEngine {
             }
         }
 
-        // Sort: Pending first, then newest first
         Collections.sort(list, new Comparator<TaskItem>() {
             @Override
             public int compare(TaskItem a, TaskItem b) {

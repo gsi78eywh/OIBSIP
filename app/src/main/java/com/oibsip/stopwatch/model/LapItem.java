@@ -2,9 +2,6 @@ package com.oibsip.stopwatch.model;
 
 import java.util.Objects;
 
-/**
- * Represents an individual recorded lap in the Stopwatch application.
- */
 public class LapItem {
 
     private final int lapNumber;
